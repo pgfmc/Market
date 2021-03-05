@@ -1,2 +1,2 @@
 # Shop
-Implements global Shop Spigot plugin
+Implements global shop Spigot plugin
