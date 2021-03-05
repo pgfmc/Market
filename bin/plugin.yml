@@ -4,3 +4,8 @@ api-version: 1.16
 author: bk
 main: net.pgfmc.shop.Main
 description: Implements a global market to buy and sell
+commands:
+  shop:
+    description: Global buy/sell shop
+    usage: /<command>
+    aliases: [ah, sh]

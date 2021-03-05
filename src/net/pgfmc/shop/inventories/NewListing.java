@@ -10,25 +10,30 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class Base implements InventoryHolder {
+public class NewListing implements InventoryHolder {
 	
 	private Inventory inv;
 	
-	public Base()
+	public NewListing()
 	{
-		inv = Bukkit.createInventory(this, 54, "Shop");
+		inv = Bukkit.createInventory(this, 27, "New Listing");
 		invBuilder();
 	}
 	
 	
 	private void invBuilder()
 	{
-		inv.setItem(46, createItemWithLore("§eBalance", Material.EMERALD, createLore("0 Bits")));
-		inv.setItem(48, createItem("§aPrevious", Material.FEATHER));
-		inv.setItem(49, createItem("§2Refresh", Material.SUNFLOWER));
-		inv.setItem(50, createItem("§aNext", Material.FEATHER));
-		inv.setItem(52, createItem("§eNew Listing", Material.OAK_SIGN));
-		inv.setItem(53, createItem("§eMy Listings", Material.GOLD_NUGGET));
+		inv.setItem(0, createItem("§eCancel", Material.FEATHER));
+		inv.setItem(3, createItem("§aItem Goes Here >>", Material.NETHER_STAR));
+		inv.setItem(5, createItem("§a<< Item Goes Here", Material.NETHER_STAR));
+		inv.setItem(10, createItem("§c-1", Material.IRON_NUGGET));
+		inv.setItem(11, createItem("§c-5", Material.GOLD_INGOT));
+		inv.setItem(12, createItem("§c-10", Material.DIAMOND));
+		inv.setItem(13, createItem("§bCOST", Material.EMERALD));
+		inv.setItem(14, createItem("§e+10", Material.DIAMOND));
+		inv.setItem(15, createItem("§e+5", Material.GOLD_INGOT));
+		inv.setItem(16, createItem("§e+1", Material.IRON_NUGGET));
+		inv.setItem(26, createItem("§4CONFIRM LISTING", Material.SLIME_BALL));
 	}
 	
 	private ItemStack createItem(String name, Material mat)
@@ -63,5 +68,7 @@ public class Base implements InventoryHolder {
 	}
 	
 	
+
+
 
 }

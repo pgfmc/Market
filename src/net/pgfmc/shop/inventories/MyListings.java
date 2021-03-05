@@ -10,25 +10,20 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class Base implements InventoryHolder {
+public class MyListings implements InventoryHolder {
 	
 	private Inventory inv;
 	
-	public Base()
+	public MyListings()
 	{
-		inv = Bukkit.createInventory(this, 54, "Shop");
+		inv = Bukkit.createInventory(this, 27, "My Listings");
 		invBuilder();
 	}
 	
 	
 	private void invBuilder()
 	{
-		inv.setItem(46, createItemWithLore("§eBalance", Material.EMERALD, createLore("0 Bits")));
-		inv.setItem(48, createItem("§aPrevious", Material.FEATHER));
-		inv.setItem(49, createItem("§2Refresh", Material.SUNFLOWER));
-		inv.setItem(50, createItem("§aNext", Material.FEATHER));
-		inv.setItem(52, createItem("§eNew Listing", Material.OAK_SIGN));
-		inv.setItem(53, createItem("§eMy Listings", Material.GOLD_NUGGET));
+		inv.setItem(0, createItem("§eBack", Material.FEATHER));
 	}
 	
 	private ItemStack createItem(String name, Material mat)
@@ -63,5 +58,6 @@ public class Base implements InventoryHolder {
 	}
 	
 	
+
 
 }

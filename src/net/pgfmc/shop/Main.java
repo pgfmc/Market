@@ -10,7 +10,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable()
 	{
-		this.getCommand("survival").setExecutor(new Shop());
+		this.getCommand("shop").setExecutor(new Shop());
 		getServer().getPluginManager().registerEvents(new InventoryEvents(), this);
 	}
 	
