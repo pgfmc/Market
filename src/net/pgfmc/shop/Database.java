@@ -4,18 +4,20 @@ import java.io.File;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class Database {
 	
 	File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
 	FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
 	
-	public void save()
+	public static void save(Player p, ItemStack item, int cost)
 	{
 		
 	}
 	
-	public void load()
+	public static void load()
 	{
 		
 	}

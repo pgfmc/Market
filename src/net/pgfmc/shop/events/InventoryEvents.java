@@ -1,10 +1,14 @@
 package net.pgfmc.shop.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import net.pgfmc.shop.Database;
 import net.pgfmc.shop.inventories.Base;
 import net.pgfmc.shop.inventories.MyListings;
 import net.pgfmc.shop.inventories.NewListing;
@@ -79,13 +83,15 @@ public class InventoryEvents implements Listener {
 	
 	
 	
+
+	int cost = 50; // Default value for cost
 	
 	@EventHandler
 	public void onInventoryClickNewlisting(InventoryClickEvent e)
 	{
 		if (!(e.getInventory().getHolder() instanceof NewListing)) { return; } // If the inventory isn't of NewListing.java then kick us out
 		
-		if (e.getCurrentItem() == null) // If it is null, cancel the click and kick us out (No action to clicking a blank slot)
+		if (e.getCurrentItem() == null && e.getSlot() != 4) // If it is null, cancel the click and kick us out (No action to clicking a blank slot)
 		{
 			e.setCancelled(true);
 			return;
@@ -100,7 +106,79 @@ public class InventoryEvents implements Listener {
 			((Player) e.getWhoClicked()).openInventory(gui.getInventory()); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
 			return;
 		}
-		 
+		
+		if (e.getSlot() == 4) // This is where you place the item you want to sell
+		{
+			return;
+		}
+		
+		if (e.getSlot() == 10)
+		{
+			cost -= 1;
+			e.setCancelled(true);
+			return;
+		}
+		
+		if (e.getSlot() == 11)
+		{
+			cost -= 5;
+			e.setCancelled(true);
+			return;
+		}
+		
+		if (e.getSlot() == 12)
+		{
+			cost -= 10;
+			e.setCancelled(true);
+			return;
+		}
+		
+		if (e.getSlot() == 14)
+		{
+			cost += 10;
+			e.setCancelled(true);
+			return;
+		}
+		
+		if (e.getSlot() == 15)
+		{
+			cost += 5;
+			e.setCancelled(true);
+			return;
+		}
+		
+		if (e.getSlot() == 16)
+		{
+			cost += 1;
+			
+			List<String> lore = new ArrayList<String>();
+			lore.add("§e§o" + String.valueOf(cost));
+			
+			e.getInventory().getItem(13).getItemMeta().setLore(lore);
+			((Player) e.getWhoClicked()).updateInventory();
+			
+			e.setCancelled(true);
+			return;
+		}
+		
+		if (e.getSlot() == 26)
+		{
+			if (e.getInventory().getItem(4) == null)
+			{
+				e.setCancelled(true);
+				return;
+			}
+			Database.save((Player) e.getWhoClicked(), e.getInventory().getItem(4), cost);
+			e.setCancelled(true);
+			e.getWhoClicked().closeInventory(); // Close their inventory
+			
+			return;
+		}
+		
+		((Player) e.getWhoClicked()).sendMessage(String.valueOf(e.getSlot()));
+		
+		e.setCancelled(true); // A catch just in case all above if statements fail
+		return;
 	}
 	
 	
