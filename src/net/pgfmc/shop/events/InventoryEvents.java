@@ -12,11 +12,9 @@ import net.pgfmc.shop.inventories.NewListing;
 public class InventoryEvents implements Listener {
 	
 	@EventHandler
-	public void onInventoryClick(InventoryClickEvent e)
+	public void onInventoryClickBase(InventoryClickEvent e)
 	{
-		if (!(e.getInventory().getHolder() instanceof Base)) { return; } // If the inventory isn't of Base.java
-		if (!(e.getInventory().getHolder() instanceof MyListings)) { return; } // or MyListings.java
-		if (!(e.getInventory().getHolder() instanceof NewListing)) { return; } // or NewListing.java, then kick us out
+		if (!(e.getInventory().getHolder() instanceof Base)) { return; } // If the inventory isn't of Base.java then kick us out
 		
 		if (e.getCurrentItem() == null) // If it is null, cancel the click and kick us out (No action to clicking a blank slot)
 		{
@@ -74,7 +72,64 @@ public class InventoryEvents implements Listener {
 			
 			e.setCancelled(true); // A catch just in case all above if statements fail
 			return;
+			
 		}
+	}
+	
+	
+	
+	
+	
+	@EventHandler
+	public void onInventoryClickNewlisting(InventoryClickEvent e)
+	{
+		if (!(e.getInventory().getHolder() instanceof NewListing)) { return; } // If the inventory isn't of NewListing.java then kick us out
+		
+		if (e.getCurrentItem() == null) // If it is null, cancel the click and kick us out (No action to clicking a blank slot)
+		{
+			e.setCancelled(true);
+			return;
+		}
+		
+		if (e.getSlot() == 0)
+		{
+			e.setCancelled(true); // Cancel the event before it closes because it could mess up and let the player keep the item idk
+			e.getWhoClicked().closeInventory(); // Close their inventory
+			
+			Base gui = new Base();
+			((Player) e.getWhoClicked()).openInventory(gui.getInventory()); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
+			return;
+		}
+		 
+	}
+	
+	
+	
+	
+	
+	
+	@EventHandler
+	public void onInventoryClickMyListings(InventoryClickEvent e)
+	{
+		if (!(e.getInventory().getHolder() instanceof MyListings)) { return; } // If the inventory isn't of MyListings.java then kick us out
+		
+		if (e.getCurrentItem() == null) // If it is null, cancel the click and kick us out (No action to clicking a blank slot)
+		{
+			e.setCancelled(true);
+			return;
+		}
+		
+		
+		if (e.getSlot() == 0)
+		{
+			e.setCancelled(true); // Cancel the event before it closes because it could mess up and let the player keep the item idk
+			e.getWhoClicked().closeInventory(); // Close their inventory
+			
+			Base gui = new Base();
+			((Player) e.getWhoClicked()).openInventory(gui.getInventory()); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
+			return;
+		}
+		 
 	}
 
 }
