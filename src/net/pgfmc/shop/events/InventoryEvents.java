@@ -1,10 +1,13 @@
 package net.pgfmc.shop.events;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +21,9 @@ import net.pgfmc.shop.inventories.MyListings;
 import net.pgfmc.shop.inventories.NewListing;
 
 public class InventoryEvents implements Listener {
+	
+	File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
+	FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
 	
 	@EventHandler
 	public void onInventoryClickBase(InventoryClickEvent e)
@@ -93,8 +99,8 @@ public class InventoryEvents implements Listener {
 	@EventHandler
 	public void onInventoryClickNewlisting(InventoryClickEvent e)
 	{
-		HashMap<UUID, HashMap<ItemStack, Integer>> lister = new HashMap<>();
-		HashMap<ItemStack, Integer> listing = new HashMap<>(); // <Item selling, cost>
+		List<Object> listingInfo = new ArrayList<>();
+		List<List<Object>> listing = new ArrayList<>();
 		
 		if (!(e.getInventory().getHolder() instanceof NewListing)) { return; } // If the inventory isn't of NewListing.java then kick us out
 		
@@ -176,11 +182,13 @@ public class InventoryEvents implements Listener {
 				return;
 			}
 			
-			Database.save((Player) e.getWhoClicked(), e.getInventory().getItem(4), cost);
+
+			listingInfo.add((Player) e.getWhoClicked());
+			listingInfo.add(e.getInventory().getItem(4));
+			listingInfo.add(cost);
+			listing.add(listingInfo);
 			
-			listing.put(e.getInventory().getItem(4), cost);
-			lister.put(e.getWhoClicked().getUniqueId(), listing);
-			Main.listings.add(lister);
+			Database.save((Player) e.getWhoClicked(), e.getInventory().getItem(4), cost, database, file, listing);
 			
 			e.setCancelled(true);
 			e.getWhoClicked().closeInventory(); // Close their inventory
