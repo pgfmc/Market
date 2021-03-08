@@ -9,16 +9,19 @@ import org.bukkit.inventory.ItemStack;
 
 public class Database {
 	
-	File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
-	FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
-	
 	public static void save(Player p, ItemStack item, int cost)
 	{
+		File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
+		FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
 		
+		database.set("", Main.listings);
 	}
 	
 	public static void load()
 	{
+		File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
+		FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
+		
 		
 	}
 

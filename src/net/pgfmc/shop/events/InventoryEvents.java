@@ -1,14 +1,18 @@
 package net.pgfmc.shop.events;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import net.pgfmc.shop.Database;
+import net.pgfmc.shop.Main;
 import net.pgfmc.shop.inventories.Base;
 import net.pgfmc.shop.inventories.MyListings;
 import net.pgfmc.shop.inventories.NewListing;
@@ -89,6 +93,9 @@ public class InventoryEvents implements Listener {
 	@EventHandler
 	public void onInventoryClickNewlisting(InventoryClickEvent e)
 	{
+		HashMap<UUID, HashMap<ItemStack, Integer>> lister = new HashMap<>();
+		HashMap<ItemStack, Integer> listing = new HashMap<>(); // <Item selling, cost>
+		
 		if (!(e.getInventory().getHolder() instanceof NewListing)) { return; } // If the inventory isn't of NewListing.java then kick us out
 		
 		if (e.getCurrentItem() == null && e.getSlot() != 4) // If it is null, cancel the click and kick us out (No action to clicking a blank slot)
@@ -168,7 +175,13 @@ public class InventoryEvents implements Listener {
 				e.setCancelled(true);
 				return;
 			}
+			
 			Database.save((Player) e.getWhoClicked(), e.getInventory().getItem(4), cost);
+			
+			listing.put(e.getInventory().getItem(4), cost);
+			lister.put(e.getWhoClicked().getUniqueId(), listing);
+			Main.listings.add(lister);
+			
 			e.setCancelled(true);
 			e.getWhoClicked().closeInventory(); // Close their inventory
 			
