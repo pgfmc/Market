@@ -183,8 +183,11 @@ public class InventoryEvents implements Listener {
 			}
 			
 
-			listing.add((Player) e.getWhoClicked());
+			listing.add("PLAYER UUID ->");
+			listing.add(((Player) e.getWhoClicked()).getUniqueId());
+			listing.add("ITEM ->");
 			listing.add(e.getInventory().getItem(4));
+			listing.add("COST ->");
 			listing.add(cost);
 			
 			if (Database.load(database, file) != null) { listings = Database.load(database, file); } // Null check
