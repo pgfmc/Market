@@ -22,8 +22,7 @@ import net.pgfmc.shop.inventories.NewListing;
 
 public class InventoryEvents implements Listener {
 	
-	File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
-	FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
+
 	
 	@EventHandler
 	public void onInventoryClickBase(InventoryClickEvent e)
@@ -183,11 +182,8 @@ public class InventoryEvents implements Listener {
 			}
 			
 
-			listing.add("PLAYER UUID ->");
 			listing.add(((Player) e.getWhoClicked()).getUniqueId());
-			listing.add("ITEM ->");
 			listing.add(e.getInventory().getItem(4));
-			listing.add("COST ->");
 			listing.add(cost);
 			
 			if (Database.load(database, file) != null) { listings = Database.load(database, file); } // Null check

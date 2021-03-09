@@ -1,16 +1,25 @@
 package net.pgfmc.shop.inventories;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.pgfmc.shop.Database;
+import net.pgfmc.shop.Main;
+
 public class Base implements InventoryHolder {
+	
+	File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
+	FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
 	
 	private Inventory inv;
 	
@@ -23,6 +32,16 @@ public class Base implements InventoryHolder {
 	
 	private void invBuilder()
 	{
+		List<List<Object>> listings = new ArrayList<>();
+		listings = Database.load(database, file); // Gets the List<List<Object>> from the database.yml file
+		ItemStack listingItem = null;
+		
+		for (int i = 0; i < listings.size(); i++) // Assigns each slot a listing
+		{
+			listingItem = (ItemStack) listings.get(i).get(1);
+			inv.setItem(i,  createItemWithLore(listingItem.getType().toString(), listingItem.getType(), createLore(listingItem.)));
+		}
+		
 		inv.setItem(46, createItemWithLore("§eBalance", Material.EMERALD, createLore("0 Bits")));
 		inv.setItem(48, createItem("§aPrevious", Material.FEATHER));
 		inv.setItem(49, createItem("§2Refresh", Material.SUNFLOWER));
