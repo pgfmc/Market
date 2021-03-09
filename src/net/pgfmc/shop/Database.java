@@ -10,10 +10,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class Database {
 	
-	public static void save(Player p, ItemStack item, int cost, FileConfiguration db, File file, List<List<Object>> listing)
+	public static void save(Player p, ItemStack item, int cost, FileConfiguration db, File file, List<List<Object>> listings)
 	{
 		
-		db.set("listings", listing);
+		db.set("listings", listings);
 		
 		try {
 			db.save(file);
@@ -23,10 +23,10 @@ public class Database {
 		}
 	}
 	
-	public static void load()
+	@SuppressWarnings("unchecked")
+	public static List<List<Object>> load(FileConfiguration db, File file)
 	{
-		
-		
+		return (List<List<Object>>) (db.get("listings"));	
 	}
 
 }

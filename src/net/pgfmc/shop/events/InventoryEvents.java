@@ -99,8 +99,8 @@ public class InventoryEvents implements Listener {
 	@EventHandler
 	public void onInventoryClickNewlisting(InventoryClickEvent e)
 	{
-		List<Object> listingInfo = new ArrayList<>();
-		List<List<Object>> listing = new ArrayList<>();
+		List<Object> listing = new ArrayList<>();
+		List<List<Object>> listings = new ArrayList<>();
 		
 		if (!(e.getInventory().getHolder() instanceof NewListing)) { return; } // If the inventory isn't of NewListing.java then kick us out
 		
@@ -183,12 +183,15 @@ public class InventoryEvents implements Listener {
 			}
 			
 
-			listingInfo.add((Player) e.getWhoClicked());
-			listingInfo.add(e.getInventory().getItem(4));
-			listingInfo.add(cost);
-			listing.add(listingInfo);
+			listing.add((Player) e.getWhoClicked());
+			listing.add(e.getInventory().getItem(4));
+			listing.add(cost);
 			
-			Database.save((Player) e.getWhoClicked(), e.getInventory().getItem(4), cost, database, file, listing);
+			if (Database.load(database, file) != null) { listings = Database.load(database, file); } // Null check
+			
+			listings.add(listing);
+			
+			Database.save((Player) e.getWhoClicked(), e.getInventory().getItem(4), cost, database, file, listings);
 			
 			e.setCancelled(true);
 			e.getWhoClicked().closeInventory(); // Close their inventory
