@@ -36,19 +36,25 @@ public class Base implements InventoryHolder {
 		listings = Database.load(database, file); // Gets the List<List<Object>> from the database.yml file
 		ItemStack listingItem = null;
 		
-		for (int i = 0; i < listings.size(); i++) // Assigns each slot a listing
+		if (listings != null)
 		{
-			listingItem = (ItemStack) listings.get(i).get(1);
-			inv.setItem(i,  createItemWithLore(listingItem.getType().toString(), listingItem.getType(), createLore(listingItem.)));
+			for (int i = 0; i < listings.size(); i++) // Assigns each slot a listing
+			{
+				if (i < 36)
+				{
+					listingItem = (ItemStack) listings.get(i).get(1);
+					inv.setItem(i, createItemWithLore(listingItem.getType().toString(), listingItem.getType(), createLore("Cost: " + listings.get(0).toString())));
+				}
+			}
 		}
-		
+			
 		inv.setItem(46, createItemWithLore("§eBalance", Material.EMERALD, createLore("0 Bits")));
 		inv.setItem(48, createItem("§aPrevious", Material.FEATHER));
 		inv.setItem(49, createItem("§2Refresh", Material.SUNFLOWER));
 		inv.setItem(50, createItem("§aNext", Material.FEATHER));
 		inv.setItem(52, createItem("§eNew Listing", Material.OAK_SIGN));
 		inv.setItem(53, createItem("§eMy Listings", Material.GOLD_NUGGET));
-	}
+}
 	
 	private ItemStack createItem(String name, Material mat)
 	{
