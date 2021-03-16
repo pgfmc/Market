@@ -180,7 +180,7 @@ public class InventoryEvents implements Listener {
 			}
 			
 
-			listing.add(((Player) e.getWhoClicked()).getUniqueId());
+			listing.add(((Player) e.getWhoClicked()).getUniqueId().toString());
 			listing.add(e.getInventory().getItem(4));
 			listing.add(cost);
 			
@@ -196,7 +196,7 @@ public class InventoryEvents implements Listener {
 			return;
 		}
 		
-		((Player) e.getWhoClicked()).sendMessage(String.valueOf(e.getSlot()));
+		((Player) e.getWhoClicked()).sendMessage(String.valueOf(e.getSlot())); // Debug
 		
 		e.setCancelled(true); // A catch just in case all above if statements fail
 		return;
@@ -219,7 +219,7 @@ public class InventoryEvents implements Listener {
 		}
 		
 		
-		if (e.getSlot() == 0)
+		if (e.getSlot() == 0) // TODO change get slot because it is WRONG!!
 		{
 			e.setCancelled(true); // Cancel the event before it closes because it could mess up and let the player keep the item idk
 			e.getWhoClicked().closeInventory(); // Close their inventory

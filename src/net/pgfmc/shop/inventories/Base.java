@@ -42,8 +42,11 @@ public class Base implements InventoryHolder {
 			{
 				if (i < 36)
 				{
-					listingItem = (ItemStack) listings.get(i).get(1);
-					inv.setItem(i, createItemWithLore(listingItem.getType().toString(), listingItem.getType(), createLore("Cost: " + listings.get(0).toString())));
+					Material itemType = listingItem.getType(); // Item type
+					String itemCost = listings.get(0).toString(); // Item cost
+					listingItem = (ItemStack) listings.get(i).get(1); // ItemStack of item
+					
+					inv.setItem(i, createItemWithLore(itemType.toString(), itemType, createLore("Cost: " + itemCost)));
 				}
 			}
 		}

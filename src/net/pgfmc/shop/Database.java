@@ -26,7 +26,7 @@ public class Database {
 	@SuppressWarnings("unchecked")
 	public static List<List<Object>> load(FileConfiguration db, File file)
 	{
-		return (List<List<Object>>) (db.get("listings"));	
+		return (List<List<Object>>) (db.get("listings"));
 	}
 
 }
