@@ -66,9 +66,4 @@ public class NewListing implements InventoryHolder {
 	public Inventory getInventory() {
 		return inv;
 	}
-	
-	
-
-
-
 }
