@@ -23,7 +23,7 @@ public class InventoryEvents implements Listener {
 	FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
 	
 	@EventHandler
-	public void onInventoryClickBase(InventoryClickEvent e)
+	public void onInventoryClickBase(InventoryClickEvent e) // Main menu interface manager (list of listings)
 	{
 		if (!(e.getInventory().getHolder() instanceof Base)) { return; } // If the inventory isn't of Base.java then kick us out
 		
@@ -101,7 +101,7 @@ public class InventoryEvents implements Listener {
 	int cost = 50; // Default value for cost
 	
 	@EventHandler
-	public void onInventoryClickNewlisting(InventoryClickEvent e)
+	public void onInventoryClickNewlisting(InventoryClickEvent e) // New Listing interface manager
 	{
 		List<Object> listing = new ArrayList<>();
 		List<List<Object>> listings = new ArrayList<>();
@@ -215,7 +215,7 @@ public class InventoryEvents implements Listener {
 	
 	
 	@EventHandler
-	public void onInventoryClickMyListings(InventoryClickEvent e)
+	public void onInventoryClickMyListings(InventoryClickEvent e) // MyListings interface manager
 	{
 		if (!(e.getInventory().getHolder() instanceof MyListings)) { return; } // If the inventory isn't of MyListings.java then kick us out
 		
