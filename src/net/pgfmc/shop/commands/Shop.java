@@ -14,18 +14,15 @@ public class Shop implements CommandExecutor {
 		
 		if (!(sender instanceof Player))
 		{
-			sender.sendMessage("§cYou cannot execute this command.");
+			sender.sendMessage("§cYou cannot execute this command."); // lol
 			return true;
 		}
 		
-		Player p = (Player) sender;
+		Player p = (Player) sender; // gets Base (all of the listings) and then opens the gui for them
 		
 		Base gui = new Base();
 		p.openInventory(gui.getInventory());
 		
 		return true;
 	}
-	
-	
-
 }

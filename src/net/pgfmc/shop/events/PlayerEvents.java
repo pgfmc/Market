@@ -11,6 +11,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.BookMeta;
 import org.geysermc.connector.common.ChatColor;
 
+import net.pgfmc.shop.inventories.Base;
+
 // Written by CrimsonDart
 
 // this code is to make it to where one can open (right click) a special book to bring them to the shops interface
@@ -25,7 +27,7 @@ public class PlayerEvents implements Listener{
 			
 			BookMeta bookMeta = e.getNewBookMeta();
 			
-			List<String> lore = new ArrayList<String>();
+			List<String> lore = new ArrayList<String>(); // --------------------------- creates new BookMeta to set the SHOP book to
 			lore.add(ChatColor.AQUA + "Use this book to access the PGF shop!");
 			lore.add("");
 			lore.add(ChatColor.AQUA + "Use the shop to trade or buy items");
@@ -43,18 +45,21 @@ public class PlayerEvents implements Listener{
 			bookMeta.setPages(pages);
 			bookMeta.setDisplayName(ChatColor.UNDERLINE + ChatColor.BOLD + ChatColor.YELLOW + "- SHOP -");
 			
-			e.setSigning(true);
+			e.setSigning(true); // signs the book (makes it a written book)
 			e.setNewBookMeta(bookMeta);
 		}
 	}
 	
+	@EventHandler
 	public void clickAirBros(PlayerInteractEvent e) { // ----------------- if the player opens the SHOP book, then it pulls up the SHOP inventory/interface
 		
 		if (e.hasItem() && e.getMaterial() == Material.WRITTEN_BOOK && e.getItem().getItemMeta().getDisplayName() == ChatColor.UNDERLINE + ChatColor.BOLD + ChatColor.YELLOW + "- SHOP -") {
 			e.setCancelled(true);
 			
 			// insert the code for pulling up the shop inventory here :)
-					
+			
+			Base gui = new Base(); // ------------------------------- pulls up the shop interface
+			e.getPlayer().openInventory(gui.getInventory());
 		}
 	}
 }

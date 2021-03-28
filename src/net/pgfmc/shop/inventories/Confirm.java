@@ -12,5 +12,4 @@ public class Confirm {
 	{
 		Inventory inv = Bukkit.createInventory(this, 54, "Shop");
 	}
-
 }

@@ -23,14 +23,13 @@ public class Base implements InventoryHolder {
 	
 	private Inventory inv;
 	
-	public Base()
+	public Base() // constructor (creates main menu for shops) 
 	{
 		inv = Bukkit.createInventory(this, 54, "Shop");
 		invBuilder();
 	}
 	
-	
-	private void invBuilder()
+	private void invBuilder() // builds the inventory to show all the listings
 	{
 		List<List<Object>> listings = new ArrayList<>();
 		listings = Database.load(database, file); // Gets the List<List<Object>> from the database.yml file
@@ -50,16 +49,16 @@ public class Base implements InventoryHolder {
 				}
 			}
 		}
-			
+		
 		inv.setItem(46, createItemWithLore("§eBalance", Material.EMERALD, createLore("0 Bits")));
 		inv.setItem(48, createItem("§aPrevious", Material.FEATHER));
 		inv.setItem(49, createItem("§2Refresh", Material.SUNFLOWER));
 		inv.setItem(50, createItem("§aNext", Material.FEATHER));
 		inv.setItem(52, createItem("§eNew Listing", Material.OAK_SIGN));
 		inv.setItem(53, createItem("§eMy Listings", Material.GOLD_NUGGET));
-}
+	}
 	
-	private ItemStack createItem(String name, Material mat)
+	private ItemStack createItem(String name, Material mat) // creates a new item with a custom name
 	{
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
@@ -68,7 +67,7 @@ public class Base implements InventoryHolder {
 		return item;
 	}
 	
-	private ItemStack createItemWithLore(String name, Material mat, List<String> lore)
+	private ItemStack createItemWithLore(String name, Material mat, List<String> lore) // creates a new item with custom name and lore
 	{
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();

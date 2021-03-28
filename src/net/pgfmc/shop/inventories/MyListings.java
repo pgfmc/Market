@@ -10,6 +10,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+// manages the inventory for viewing your own listings
+
 public class MyListings implements InventoryHolder {
 	
 	private Inventory inv;

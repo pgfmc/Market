@@ -10,6 +10,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+// manages the inventory for creating a new listing
+
 public class NewListing implements InventoryHolder {
 	
 	private Inventory inv;
@@ -19,7 +21,6 @@ public class NewListing implements InventoryHolder {
 		inv = Bukkit.createInventory(this, 27, "New Listing");
 		invBuilder();
 	}
-	
 	
 	private void invBuilder()
 	{
@@ -36,7 +37,7 @@ public class NewListing implements InventoryHolder {
 		inv.setItem(26, createItem("§4CONFIRM LISTING", Material.SLIME_BALL));
 	}
 	
-	private ItemStack createItem(String name, Material mat)
+	private ItemStack createItem(String name, Material mat) // function for creating an item with a custom name
 	{
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
@@ -45,7 +46,7 @@ public class NewListing implements InventoryHolder {
 		return item;
 	}
 	
-	private ItemStack createItemWithLore(String name, Material mat, List<String> lore)
+	private ItemStack createItemWithLore(String name, Material mat, List<String> lore) // function for creating a new item with 
 	{
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
