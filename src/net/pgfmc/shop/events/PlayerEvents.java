@@ -6,9 +6,11 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.geysermc.connector.common.ChatColor;
 
 import net.pgfmc.shop.inventories.Base;
@@ -19,11 +21,12 @@ import net.pgfmc.shop.inventories.Base;
 // this in an attempt to make the PGF experience more intuitive, and use less commands
 // the special book is created by signing a Writable book with the title "shop" (not case sensitive) and then the plugin takes care of the rest
 
-public class PlayerEvents implements Listener{
+public class PlayerEvents implements Listener {
 	
 	@EventHandler
 	public void editBook(PlayerEditBookEvent e) { // -------------------- sets a book to be able to be used by the PGF shops plugin
-		if (e.getNewBookMeta().getTitle().toLowerCase() == "shop") {
+		
+		if (e.getNewBookMeta().getTitle() != null && e.getNewBookMeta().getTitle().toLowerCase().contains("shop")) {
 			
 			BookMeta bookMeta = e.getNewBookMeta();
 			
@@ -39,11 +42,11 @@ public class PlayerEvents implements Listener{
 			List<String> pages = new ArrayList<String>();
 			pages.add("");
 			
-			bookMeta.setTitle(ChatColor.UNDERLINE + ChatColor.BOLD + ChatColor.YELLOW + "- SHOP -");
+			bookMeta.setTitle("§n§l§e- SHOP -");
 			bookMeta.setAuthor("PGF");
 			bookMeta.setLore(lore);
 			bookMeta.setPages(pages);
-			bookMeta.setDisplayName(ChatColor.UNDERLINE + ChatColor.BOLD + ChatColor.YELLOW + "- SHOP -");
+			bookMeta.setDisplayName("§n§l§e- SHOP -");
 			
 			e.setSigning(true); // signs the book (makes it a written book)
 			e.setNewBookMeta(bookMeta);
@@ -53,13 +56,16 @@ public class PlayerEvents implements Listener{
 	@EventHandler
 	public void clickAirBros(PlayerInteractEvent e) { // ----------------- if the player opens the SHOP book, then it pulls up the SHOP inventory/interface
 		
-		if (e.hasItem() && e.getMaterial() == Material.WRITTEN_BOOK && e.getItem().getItemMeta().getDisplayName() == ChatColor.UNDERLINE + ChatColor.BOLD + ChatColor.YELLOW + "- SHOP -") {
-			e.setCancelled(true);
+		if (e.hasItem() && e.getMaterial() == Material.WRITTEN_BOOK && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_AIR))) {
 			
-			// insert the code for pulling up the shop inventory here :)
-			
-			Base gui = new Base(); // ------------------------------- pulls up the shop interface
-			e.getPlayer().openInventory(gui.getInventory());
+			ItemMeta itemMeta = e.getItem().getItemMeta();
+					
+			if (itemMeta.getDisplayName().toLowerCase().contains("shop")) { 
+				
+				e.setCancelled(true);
+				Base gui = new Base(); // ------------------------------- pulls up the shop interface
+				e.getPlayer().openInventory(gui.getInventory());
+			}
 		}
 	}
 }

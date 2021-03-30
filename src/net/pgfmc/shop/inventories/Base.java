@@ -1,25 +1,18 @@
 package net.pgfmc.shop.inventories;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.pgfmc.shop.Database;
-import net.pgfmc.shop.Main;
+import net.pgfmc.shop.Listing;
 
 public class Base implements InventoryHolder {
-	
-	File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
-	FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
 	
 	private Inventory inv;
 	
@@ -31,21 +24,29 @@ public class Base implements InventoryHolder {
 	
 	private void invBuilder() // builds the inventory to show all the listings
 	{
-		List<List<Object>> listings = new ArrayList<>();
-		listings = Database.load(database, file); // Gets the List<List<Object>> from the database.yml file
+		List<Listing> listings = Listing.getListings(); // Gets the List<List<Object>> from the database.yml file
+		
 		ItemStack listingItem = null;
 		
 		if (listings != null)
 		{
-			for (int i = 0; i < listings.size(); i++) // Assigns each slot a listing
+			
+			int index = 0;
+			
+			for (Listing listing : listings) // Assigns each slot a listing
 			{
-				if (i < 36)
+				if (listings.size() < 36)
 				{
-					listingItem = (ItemStack) listings.get(i).get(1); // ItemStack of item
+					listingItem = listing.getItem() ; // ItemStack of item
 					Material itemType = listingItem.getType(); // Item type
-					String itemCost = listings.get(0).toString(); // Item cost
+					String itemCost = listing.getPrice().toString(); // Item cost
 					
-					inv.setItem(i, createItemWithLore(itemType.toString(), itemType, createLore("Cost: " + itemCost)));
+					List<String> lore = new ArrayList<String>(); // lore builder
+					lore.add("§7Cost: §b§l" + itemCost + " Bits");
+					lore.add("§7Sold by §r" + listing.getPlayer().getName());
+					
+					inv.setItem(index, createItemWithLore(itemType.toString(), itemType, lore));
+					index++;
 				}
 			}
 		}

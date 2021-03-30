@@ -37,6 +37,8 @@ public class MyListings implements InventoryHolder {
 		return item;
 	}
 	
+	@SuppressWarnings("unused")
+	@Deprecated
 	private ItemStack createItemWithLore(String name, Material mat, List<String> lore)
 	{
 		ItemStack item = new ItemStack(mat, 1);
@@ -47,6 +49,8 @@ public class MyListings implements InventoryHolder {
 		return item;
 	}
 	
+	@SuppressWarnings("unused")
+	@Deprecated
 	private List<String> createLore(String line1) // Creates a List<String> that represents lore // I want to be organized and not have this code for every ItemStack I want to create with a lore  -.-
 	{
 		List<String> lore = new ArrayList<String>();

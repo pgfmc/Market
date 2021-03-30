@@ -7,5 +7,5 @@ description: Implements a global market to buy and sell
 commands:
   shop:
     description: Global buy/sell shop
-    usage: /<command>
+    usage: /shop
     aliases: [ah, sh]
