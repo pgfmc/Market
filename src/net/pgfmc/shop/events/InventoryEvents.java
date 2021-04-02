@@ -10,11 +10,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 
 import net.pgfmc.shop.Listing;
 import net.pgfmc.shop.Main;
 import net.pgfmc.shop.inventories.Base;
+import net.pgfmc.shop.inventories.Confirm;
 import net.pgfmc.shop.inventories.MyListings;
 import net.pgfmc.shop.inventories.NewListing;
 
@@ -26,22 +29,29 @@ public class InventoryEvents implements Listener {
 	@EventHandler
 	public void onInventoryClickBase(InventoryClickEvent e) // Main menu interface manager (list of listings)
 	{
-		
-		if (!(e.getInventory().getHolder() instanceof Base) || e.getCurrentItem() == null) { return; } // If the inventory isn't of Base.java then kick us out
+		Inventory inv = e.getClickedInventory();
+		if ((inv != null && !(inv.getHolder() instanceof Base)) || e.getCurrentItem() == null) { return; } // If the inventory isn't of Base.java then kick us out
 		
 		// If it is null, cancel the click and kick us out (No action to clicking a blank slot)
 		
 		e.setCancelled(true);
+		
+		InventoryAction action = e.getAction();
+		
+		if (action == InventoryAction.SWAP_WITH_CURSOR || action == InventoryAction.PLACE_ALL || action == InventoryAction.PLACE_ONE || action == InventoryAction.PLACE_SOME) {
+			return;
+		}
 		
 		
 		int slot = e.getSlot();
 		
 		if (slot >= 0 && slot < 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0
 			// code here for buying an item / offering to buy an item
+			
+			e.getWhoClicked().openInventory(new Confirm(Listing.getListings().get(slot)).getInventory()); // opens a buy interface to buy an item
+			
 			return;
 		}
-		
-		
 		
 		switch(slot) { // switch statement
 			
@@ -75,22 +85,21 @@ public class InventoryEvents implements Listener {
 	
 	
 	
-	
-
-	int cost = 50; // Default value for cost
-	
 	@EventHandler
 	public void onInventoryClickNewlisting(InventoryClickEvent e) // New Listing interface manager
 	{
 		
-		if (!(e.getInventory().getHolder() instanceof NewListing)) { return; } // If the inventory isn't of NewListing.java then kick us out
+		((Player) e.getWhoClicked()).sendMessage(String.valueOf(e.getSlot())); // Debug
+		
+		Inventory inv = e.getClickedInventory();
+		if (inv != null && !(inv.getHolder() instanceof NewListing)) { return; } // If the inventory isn't of NewListing.java then kick us out
 		
 		int slot = e.getSlot();
 		
-		((Player) e.getWhoClicked()).sendMessage(String.valueOf(slot)); // Debug
-		
 		
 		e.setCancelled(true); // defaults to cancel true :-)
+		
+		int cost = 50; // Default value for cost
 		
 		switch(slot) { // switch statement
 		
@@ -126,8 +135,8 @@ public class InventoryEvents implements Listener {
 						return;
 					}
 		
-					new Listing((OfflinePlayer) e.getWhoClicked(), e.getInventory().getItem(4), cost); // creates listing
-		
+					Listing.createListing((OfflinePlayer) e.getWhoClicked(), e.getInventory().getItem(4), cost); // creates listing
+					
 					Listing.saveListings(); // saves listing
 		
 					e.getWhoClicked().closeInventory(); // Close their inventory
@@ -137,15 +146,11 @@ public class InventoryEvents implements Listener {
 		}
 	}
 	
-	
-	
-	
-	
-	
 	@EventHandler
-	public void onInventoryClickMyListings(InventoryClickEvent e) // MyListings interface manager
-	{
-		if (!(e.getInventory().getHolder() instanceof MyListings)) { return; } // If the inventory isn't of MyListings.java then kick us out
+	public void onInventoryClickMyListings(InventoryClickEvent e) { // MyListings interface manager
+		
+		Inventory inv = e.getClickedInventory();
+		if (inv != null && !(inv.getHolder() instanceof MyListings)) { return; } // If the inventory isn't of MyListings.java then kick us out
 		
 		if (e.getCurrentItem() == null) // If it is null, cancel the click and kick us out (No action to clicking a blank slot)
 		{
@@ -156,14 +161,12 @@ public class InventoryEvents implements Listener {
 		
 		if (e.getSlot() == 0) // TODO change get slot because it is WRONG!!
 		{
-			e.setCancelled(true); // Cancel the event before it closes because it could mess up and let the player keep the item idk
+			e.setCancelled(true); // Cancel the event before it closes because it could mess up and let the player keep the item idk // yes probably
 			e.getWhoClicked().closeInventory(); // Close their inventory
 			
 			Base gui = new Base();
 			((Player) e.getWhoClicked()).openInventory(gui.getInventory()); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
 			return;
 		}
-		 
 	}
-
 }

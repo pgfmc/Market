@@ -1,16 +1,17 @@
 package net.pgfmc.shop;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Listing implements Serializable {
+public class Listing {
 	
-	private static final long serialVersionUID = -8515261291824360001L;
-	private static List<Listing> instances = new ArrayList<Listing>();
+	private transient static List<Listing> instances = new ArrayList<Listing>();
 
 	public enum listingType {
 		LISTING,
@@ -19,44 +20,35 @@ public class Listing implements Serializable {
 	}
 	
 	listingType type;
-	OfflinePlayer seller;
 	ItemStack itemBeingSold;
 	int price;
 	ItemStack tradeItem;
+	UUID playerUuid;
+	
 	
 	// ------------------------------------------------------------------------ Constructors
 	
-	public Listing(OfflinePlayer Seller, ItemStack Item, int priceBit) { // new "direct purchase" / "Listing"
+	public Listing(OfflinePlayer seller, ItemStack itemBeingSold, int price, ItemStack tradeItem, listingType type) {
+		this.type = type;
+		this.itemBeingSold = itemBeingSold;
+		this.price = price;
+		this.tradeItem = tradeItem;
+		this.playerUuid = seller.getUniqueId();
 		
-		type = listingType.LISTING;
-		seller = Seller;
-		itemBeingSold = Item;
-		price = priceBit;
-		tradeItem = null;
-
 		instances.add(this);
+		Listing.saveListings();
 	}
 	
-	public Listing(OfflinePlayer Seller, int priceBit, ItemStack icon) { // new offer / Service / Bulk Purchase
-		
-		type = listingType.OFFER;
-		seller = Seller;
-		itemBeingSold = icon;
-		price = priceBit;
-		tradeItem = null;
-
-		instances.add(this);
+	public static Listing createListing(OfflinePlayer Seller, ItemStack Item, int priceBit) { // new "direct purchase" / "Listing"
+		return new Listing(Seller, Item, priceBit, null, listingType.LISTING);
 	}
 	
-	public Listing(OfflinePlayer Seller, ItemStack trade, ItemStack icon) { // new trade offer
-		
-		type = listingType.TRADEOFFER;
-		seller = Seller;
-		itemBeingSold = icon;
-		price = 0;
-		tradeItem = trade;
-		
-		instances.add(this);
+	public static Listing offerListing(OfflinePlayer Seller, int priceBit, ItemStack icon) { // new offer / Service / Bulk Purchase
+		return new Listing(Seller, icon, priceBit, null, listingType.OFFER);
+	}
+	
+	public static Listing tradeListing(OfflinePlayer Seller, ItemStack trade, ItemStack icon) { // new trade offer
+		return new Listing(Seller, trade, 0, icon, listingType.TRADEOFFER);
 	}
 	
 	// ------------------------------------------------------------------------ Save and Load
@@ -66,6 +58,7 @@ public class Listing implements Serializable {
 	}
 	
 	public static void loadListings() {
+		instances.clear();
 		Database.load();
 	}
 	
@@ -90,7 +83,7 @@ public class Listing implements Serializable {
 	// ------------------------------------------------------------------------ Get Seller
 	
 	public OfflinePlayer getPlayer() {
-		return seller;
+		return Bukkit.getOfflinePlayer(playerUuid);
 	}
 	
 	// ------------------------------------------------------------------------ Get Price
@@ -103,5 +96,11 @@ public class Listing implements Serializable {
 	
 	public ItemStack getTrade() {
 		return tradeItem;
+	}
+	
+	// ------------------------------------------------------------------------ Confirm / Buy
+	
+	public void purchase(Player player) {
+		
 	}
 }

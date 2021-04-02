@@ -56,7 +56,7 @@ public class PlayerEvents implements Listener {
 	@EventHandler
 	public void clickAirBros(PlayerInteractEvent e) { // ----------------- if the player opens the SHOP book, then it pulls up the SHOP inventory/interface
 		
-		if (e.hasItem() && e.getMaterial() == Material.WRITTEN_BOOK && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_AIR))) {
+		if (e.hasItem() && e.getMaterial() == Material.WRITTEN_BOOK && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			
 			ItemMeta itemMeta = e.getItem().getItemMeta();
 					
