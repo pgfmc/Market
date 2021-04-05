@@ -27,15 +27,12 @@ public class Database {
 	
 	public static void save(List<Listing> listings) { // saves all instances of Listing
 		
-		Bukkit.broadcastMessage(listings.toString());
-		
 		int i = 0;
 		
 		for (Listing listing : listings) {
 			
 			List<Object> list = new ArrayList<Object>();
 			
-			list.add(listing.price);
 			list.add(listing.itemBeingSold);
 			list.add(listing.playerUuid.toString());
 			list.add(listing.tradeItem);
@@ -60,7 +57,7 @@ public class Database {
 		for (String key : database.getKeys(false)) { // gets all keys in databse.yml, then then gets each listing induvidually, while putting them into a Set
 			List<?> memSec = database.getList(key);
 			
-			listings.add(new Listing(Bukkit.getOfflinePlayer(UUID.fromString((String) memSec.get(2))), (ItemStack) memSec.get(1), (int) memSec.get(0), (ItemStack) memSec.get(3), Listing.listingType.valueOf((String) memSec.get(4))));
+			listings.add(new Listing(Bukkit.getOfflinePlayer(UUID.fromString((String) memSec.get(1))), (ItemStack) memSec.get(0), (ItemStack) memSec.get(2), Listing.listingType.valueOf((String) memSec.get(3))));
 			// i spent 3 actual hours trying to get Serialization to work normally
 			// i just decided to settle on this monstrosity lol
 		}

@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.geysermc.connector.common.ChatColor;
 
 import net.pgfmc.shop.inventories.Base;
 
@@ -31,13 +30,13 @@ public class PlayerEvents implements Listener {
 			BookMeta bookMeta = e.getNewBookMeta();
 			
 			List<String> lore = new ArrayList<String>(); // --------------------------- creates new BookMeta to set the SHOP book to
-			lore.add(ChatColor.AQUA + "Use this book to access the PGF shop!");
+			lore.add("§bUse this book to access the PGF shop!");
 			lore.add("");
-			lore.add(ChatColor.AQUA + "Use the shop to trade or buy items");
-			lore.add(ChatColor.AQUA + "from other players!");
+			lore.add("§bUse the shop to trade or buy items");
+			lore.add("§bfrom other players!");
 			lore.add("");
-			lore.add(ChatColor.AQUA + "You can put your items on sale, or");
-			lore.add(ChatColor.AQUA + "auction them!");
+			lore.add("§bYou can put your items on sale, or");
+			lore.add("§bauction them!");
 			
 			List<String> pages = new ArrayList<String>();
 			pages.add("");

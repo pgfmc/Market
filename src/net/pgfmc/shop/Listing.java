@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,40 +16,30 @@ public class Listing {
 
 	public enum listingType {
 		LISTING,
-		OFFER,
 		TRADEOFFER
 	}
 	
 	listingType type;
 	ItemStack itemBeingSold;
-	int price;
 	ItemStack tradeItem;
 	UUID playerUuid;
 	
 	
 	// ------------------------------------------------------------------------ Constructors
 	
-	public Listing(OfflinePlayer seller, ItemStack itemBeingSold, int price, ItemStack tradeItem, listingType type) {
+	public Listing(OfflinePlayer seller, ItemStack itemBeingSold, ItemStack tradeItem, listingType type) {
 		this.type = type;
 		this.itemBeingSold = itemBeingSold;
-		this.price = price;
-		this.tradeItem = tradeItem;
+		
 		this.playerUuid = seller.getUniqueId();
+		
+		if (tradeItem == null) {
+			tradeItem = new ItemStack(Material.DIAMOND, 1);
+		}
+		this.tradeItem = tradeItem;
 		
 		instances.add(this);
 		Listing.saveListings();
-	}
-	
-	public static Listing createListing(OfflinePlayer Seller, ItemStack Item, int priceBit) { // new "direct purchase" / "Listing"
-		return new Listing(Seller, Item, priceBit, null, listingType.LISTING);
-	}
-	
-	public static Listing offerListing(OfflinePlayer Seller, int priceBit, ItemStack icon) { // new offer / Service / Bulk Purchase
-		return new Listing(Seller, icon, priceBit, null, listingType.OFFER);
-	}
-	
-	public static Listing tradeListing(OfflinePlayer Seller, ItemStack trade, ItemStack icon) { // new trade offer
-		return new Listing(Seller, trade, 0, icon, listingType.TRADEOFFER);
 	}
 	
 	// ------------------------------------------------------------------------ Save and Load
@@ -88,8 +79,8 @@ public class Listing {
 	
 	// ------------------------------------------------------------------------ Get Price
 	
-	public Integer getPrice() {
-		return price;
+	public String getPrice() { // returns a string representation of the cost of this listing
+		return Main.makePlural(tradeItem);
 	}
 	
 	// ------------------------------------------------------------------------ Get TradeItem
@@ -102,5 +93,10 @@ public class Listing {
 	
 	public void purchase(Player player) {
 		
+	}
+	
+	public void deleteListing() {
+		instances.remove(this);
+		System.gc();
 	}
 }
