@@ -54,7 +54,7 @@ public class NewListing implements InventoryHolder {
 		} else if (price.getAmount() < 1) {
 			price.setAmount(1);
 		}
-		inv.setItem(13, Main.switchLore(price, String.valueOf(price) + Main.makePlural(price)));
+		inv.setItem(13, Main.switchLore(price, String.valueOf(price.getAmount()) + Main.makePlural(price)));
 	}
 	
 	public Material getCurrency() {
@@ -63,7 +63,7 @@ public class NewListing implements InventoryHolder {
 	
 	public void setCurrency(Material mat) {
 		price.setType(mat);
-		inv.setItem(13, Main.switchLore(price, String.valueOf(price) + Main.makePlural(price)));
+		inv.setItem(13, Main.switchLore(price, String.valueOf(price.getAmount()) + Main.makePlural(price)));
 	}
 	
 	public boolean getIsTrade() {

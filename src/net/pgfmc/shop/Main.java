@@ -102,9 +102,9 @@ public static ItemStack switchLore(ItemStack item, String lore) { // changes the
 		} else {
 			if (name.endsWith("s")) {
 				
-				return(String.valueOf(itemStack.getAmount()) + " " + name + "s");
-			} else {
 				return(String.valueOf(itemStack.getAmount()) + " " + name + "es");
+			} else {
+				return(String.valueOf(itemStack.getAmount()) + " " + name + "s");
 			}
 		}
 	}
@@ -128,25 +128,23 @@ public static ItemStack switchLore(ItemStack item, String lore) { // changes the
 		case REPEATER: return "Redstone Repeater";
 		
 		default: 	String name = material.name();
-		
+
 					if (name.contains("MUSIC_DISC_")) {
-						name.replaceFirst("MUSIC_DISC_", "");
+						name = name.replaceFirst("MUSIC_DISC_", "");
 					}
 		
-					name.toLowerCase();
-					name.replace("_", " ");
+					name = name.toLowerCase();
+					name = name.replace("_", " ");
 					String[] list = name.split(" ");
 					
 					name = "";
 					for (String string : list) {
 						
-						Character letter =  string.charAt(0);
-						Character gamer = Character.toUpperCase(letter);
-						string.replaceFirst(letter.toString(), gamer.toString());
-						name = name + string + " ";
+						char[] charArray = string.toCharArray();
+						charArray[0] = Character.toUpperCase(charArray[0]);
+						name = name + new String(charArray) + " ";
 					}
-					name.stripTrailing();
-					
+					name = name.stripTrailing();
 					return name;
 		}
 	}

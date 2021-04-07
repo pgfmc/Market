@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -85,11 +86,9 @@ public class InventoryEvents implements Listener {
 		Inventory inv = e.getClickedInventory();
 		if (inv == null || !(inv.getHolder() instanceof NewListing)) { return; } // If the inventory isn't of NewListing.java then kick us out
 		
-		NewListing inventory = (NewListing) inv.getHolder();
-		
+		e.setResult(Result.DENY); // defaults to cancel true :-)
 		int slot = e.getSlot();
-		
-		e.setCancelled(true); // defaults to cancel true :-)
+		NewListing inventory = (NewListing) inv.getHolder();
 		
 		switch(slot) { // switch statement
 		
@@ -98,7 +97,7 @@ public class InventoryEvents implements Listener {
 					Base gui = new Base();
 					((Player) e.getWhoClicked()).openInventory(gui.getInventory()); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
 					return;
-		case 4: 	e.setCancelled(false);
+		case 4: 	e.setResult(Result.ALLOW);
 					return;
 		case 10:	inventory.incrementPrice(-1);
 					return;
@@ -106,7 +105,7 @@ public class InventoryEvents implements Listener {
 					return;
 		case 12:	inventory.incrementPrice(-10);
 					return;
-		case 13: 	inventory.setCurrency(e.getCursor().getType());			
+		case 13: 	inventory.setCurrency(e.getCursor().getType());
 		
 		case 14: 	inventory.incrementPrice(10);
 					return;
