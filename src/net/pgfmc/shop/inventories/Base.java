@@ -26,7 +26,7 @@ public class Base implements InventoryHolder {
 		
 		listings = Listing.getListings(); // Gets the Listing from the database.yml file
 		pages = ((int) Math.floor((listings.size() + 1) / 36));
-		
+		Listing.loadListings();
 		invBuilder();
 	}
 	

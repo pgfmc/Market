@@ -1,45 +1,79 @@
 package net.pgfmc.shop.inventories;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import net.pgfmc.shop.Database;
 import net.pgfmc.shop.Listing;
 import net.pgfmc.shop.Main;
 
-public class ViewOwnListing implements InventoryHolder {
+public class PurchaseListing implements InventoryHolder {
 	
-	private Listing listing;
-	private Inventory inv;
-	public boolean isTaken = false;
+	Inventory inv;
+	Listing lst;
+	public boolean isBought = false;
+	public boolean closing = false;
 	
-	public ViewOwnListing(Listing listing) {
-		this.listing = listing;
-		inv = Bukkit.createInventory(this, 27, Main.getName(listing.getItem().getType()));
+	
+	
+	public PurchaseListing(Listing listing) { // constructor (creates menu for buying an item)
 		
+		lst = listing;
+		inv = Bukkit.createInventory(this, 27, "");
 		invBuilder();
+		
 	}
 	
 	private void invBuilder() {
 		
-		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
-		inv.setItem(12, Main.switchLore(listing.getItem(), new ArrayList<String>()));
-		inv.setItem(14, Main.createItem("take the item to delete the Listing!", Material.PAPER));
+		inv.setItem(0, Main.createItem("§eCancel", Material.FEATHER));
+		
+		ItemMeta itemMeta = lst.getItem().getItemMeta();
+		itemMeta.setLore(new ArrayList<String>());
+		ItemStack itemStack = lst.getItem().clone();
+		itemStack.setItemMeta(itemMeta);
+		
+		inv.setItem(11, itemStack);
+		
+		itemMeta = lst.getTrade().getItemMeta();
+		
+		List<String> list = new ArrayList<String>();
+		list.add("Place the required item in the item slot");
+		list.add("to the left, then take the item you paid for!");
+		list.add("");
+		list.add("Required payment: " + lst.getPrice());
+		list.add("Listing Posted by " + lst.getPlayer().getName());
+		
+		itemMeta.setLore(list);
+		
+		itemStack = lst.getTrade();
+		itemStack.setItemMeta(itemMeta);
+		
+		inv.setItem(16, itemStack);
+		setInventoryState(Material.RED_CONCRETE);
 	}
 	
-	public Listing getListing() {
-		return listing;
+	public void setInventoryState(Material material) {
+		int[] list = {2, 5, 10, 12, 13, 15, 20, 23};
+		for (int slot : list) {
+			inv.setItem(slot, Main.createItem(" ", material));
+		}
 	}
 	
 	public void confirmBuy() { // clears the inventory, and makes it to where all actions in the inventory are cancelled.
 		
-		isTaken = true;
+		Database.addMoneytoPlayer((Player) lst.getPlayer(), lst.getTrade());
+		lst.deleteListing();
 		inv.setItem(14, new ItemStack(Material.AIR));
-		listing.deleteListing();
+		isBought = true;
 		
 		ItemStack ironBars = Main.createItem("Item has been taken!", Material.IRON_BARS);
 		
@@ -79,10 +113,31 @@ public class ViewOwnListing implements InventoryHolder {
             }
         }, 7);
 	}
-		
+	
+	public boolean canBuy() { // returns if the listing can be bought
+
+		if (inv.getItem(14) != null && inv.getItem(14).getType() == lst.getTrade().getType() && inv.getItem(14).getAmount() == lst.getTrade().getAmount()) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	public void setClosing(boolean closing) {
+		this.closing = closing;
+	}
+	
+	public boolean getClosing() {
+		return closing;
+	}
+	
+	public Listing getListing() {
+		return lst;
+	}
+	
 	@Override
 	public Inventory getInventory() {
-		// TODO Auto-generated method stub
 		return inv;
 	}
 }

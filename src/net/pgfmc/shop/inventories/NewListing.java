@@ -19,6 +19,7 @@ public class NewListing implements InventoryHolder {
 	private Inventory inv;
 	private ItemStack price = new ItemStack(Material.DIAMOND, 1);
 	private boolean isTrade = false;
+	private boolean closing = false;
 	
 	public NewListing()
 	{
@@ -34,9 +35,9 @@ public class NewListing implements InventoryHolder {
 		inv.setItem(5, Main.createItem("§a<< Item Goes Here", Material.NETHER_STAR));
 		inv.setItem(10, Main.createItem("§c-1", Material.IRON_NUGGET));
 		inv.setItem(11, Main.createItem("§c-5", Material.GOLD_INGOT));
-		inv.setItem(12, Main.createItem("§c-10", Material.DIAMOND));
-		inv.setItem(13, Main.switchLore(Main.createItem("§bCOST", Material.EMERALD), String.valueOf(price) + " Diamonds"));
-		inv.setItem(14, Main.createItem("§e+10", Material.DIAMOND));
+		inv.setItem(12, Main.createItem("§c-10", Material.EMERALD));
+		inv.setItem(13, Main.switchLore(Main.createItem("§bCOST", Material.DIAMOND), Main.makePlural(price)));
+		inv.setItem(14, Main.createItem("§e+10", Material.EMERALD));
 		inv.setItem(15, Main.createItem("§e+5", Material.GOLD_INGOT));
 		inv.setItem(16, Main.createItem("§e+1", Material.IRON_NUGGET));
 		inv.setItem(26, Main.createItem("§4CONFIRM LISTING", Material.SLIME_BALL));
@@ -49,12 +50,12 @@ public class NewListing implements InventoryHolder {
 	public void incrementPrice(int increment) {
 		
 		price.setAmount(price.getAmount() + increment);
-		if (price.getAmount() > 64) { // ---- overflow protection
-			price.setAmount(64);
+		if (price.getAmount() > price.getMaxStackSize()) { // ---- overflow protection
+			price.setAmount(price.getMaxStackSize());
 		} else if (price.getAmount() < 1) {
 			price.setAmount(1);
 		}
-		inv.setItem(13, Main.switchLore(price, String.valueOf(price.getAmount()) + Main.makePlural(price)));
+		inv.setItem(13, Main.switchLore(price, Main.makePlural(price)));
 	}
 	
 	public Material getCurrency() {
@@ -62,8 +63,12 @@ public class NewListing implements InventoryHolder {
 	}
 	
 	public void setCurrency(Material mat) {
-		price.setType(mat);
-		inv.setItem(13, Main.switchLore(price, String.valueOf(price.getAmount()) + Main.makePlural(price)));
+		if (mat != Material.AIR) {
+			price.setType(mat);
+			inv.setItem(13, Main.switchLore(price, String.valueOf(price.getAmount()) + Main.makePlural(price)));
+		}
+		incrementPrice(0);
+		return;
 	}
 	
 	public boolean getIsTrade() {
@@ -72,6 +77,14 @@ public class NewListing implements InventoryHolder {
 	
 	public void setTrade(boolean setter) {
 		isTrade = setter;
+	}
+	
+	public void setClosing(boolean setter) {
+		closing = setter;
+	}
+	
+	public boolean getClosing() {
+		return closing;
 	}
 	
 	public void finalizeListing(Player player) {

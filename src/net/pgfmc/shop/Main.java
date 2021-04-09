@@ -44,6 +44,8 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
 		
 		Listing.loadListings();
+		
+		
 	}
 	
 	// functions used all around the place in this pluign :)
@@ -52,6 +54,7 @@ public class Main extends JavaPlugin {
 	{
 		ItemStack item = new ItemStack(mat, 1);
 		ItemMeta meta = item.getItemMeta();
+		
 		meta.setDisplayName(name);
 		item.setItemMeta(meta);
 		return item;

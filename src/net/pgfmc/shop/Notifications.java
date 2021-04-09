@@ -1,4 +1,4 @@
-package net.pgfmc.shop.inventories;
+package net.pgfmc.shop;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,28 +11,21 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.pgfmc.shop.Listing;
-import net.pgfmc.shop.Main;
-
-// manages the inventory for viewing your own listings
-
-public class MyListings implements InventoryHolder {
+public class Notifications implements InventoryHolder {
 	
-	private final Inventory inv;
-	private final List<Listing> list = new ArrayList<Listing>();
-	private final double pages;
-	private transient int currentPage = 1;
+	Inventory inv;
+	Player player;
+	List<ItemStack> items = new ArrayList<ItemStack>();
+	List<Notifications> instances = new ArrayList<Notifications>();
+	int currentPage = 1;
+	final int pages;
 	
-	
-	public MyListings(Player player) { // ---------------------------- constructor
-		inv = Bukkit.createInventory(this, 27, "My Listings");
-		for (Listing listing : Listing.getListings()) { // adds all Listings the player posted to the list
-			if ((Player) listing.getPlayer() == player) {
-				list.add(listing);
-			}
-		}
-
-		pages = (((double) list.size()) + 1.0) / 21.0;
+	public Notifications(Player player) {
+		inv = Bukkit.createInventory(this, 27, "My Money");
+		items = Database.getPlayerMoney(player);
+		this.player = player;
+		instances.add(this);
+		pages = ((int) Math.ceil((items.size() + 1) / 21));
 		
 		invBuilder();
 	}
@@ -41,10 +34,11 @@ public class MyListings implements InventoryHolder {
 		
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		
-		if (pages > 1.0) { // if the size of the list is 21 or greater, show buttons for changing pages
+		if (pages > 1) { // if the size of the list is 21 or greater, show buttons for changing pages
 			inv.setItem(9, Main.createItem("Previous Page", Material.IRON_HOE));
 			inv.setItem(18, Main.createItem("Next Page", Material.ARROW));
 		}
+		
 		goToPage(currentPage);
 	}
 	
@@ -53,15 +47,13 @@ public class MyListings implements InventoryHolder {
 		for (int index = 0; index < 20; index++) {
 			ItemStack itemStack = null;
 			try {
-					itemStack = list.get(index + 21 * (page - 1)).getItem();
+					itemStack = items.get(index);
 					ItemMeta itemMeta = itemStack.getItemMeta();
-					List<String> lore = new ArrayList<String>();
-					lore.add("Price: " + Main.makePlural(itemStack));
+					itemMeta.setLore(new ArrayList<String>());
 					itemStack.setItemMeta(itemMeta);
 					
 			} catch (Exception e) {
 			} finally {
-				
 				
 				switch(index) {
 				case 0: inv.setItem(2, itemStack);
@@ -112,12 +104,23 @@ public class MyListings implements InventoryHolder {
 		return currentPage;
 	}
 	
-	public List<Listing> getListings() {
-		return list;
+	public void itemTaken(int slot) {
+		
+		if (slot >= 2 && slot <= 8) {
+			items.remove(slot - 2 + ((currentPage - 1) * 21));
+			
+		} else if (slot >= 11 && slot <= 17) {
+			items.remove(slot - 4 + ((currentPage - 1) * 21));
+			
+		} else if (slot >= 20 && slot <= 26) {
+			items.remove(slot - 6 + ((currentPage - 1) * 21));
+		}
+		Database.setPlayerMoney(player, items);
 	}
-	
+
 	@Override
 	public Inventory getInventory() {
 		return inv;
 	}
+
 }

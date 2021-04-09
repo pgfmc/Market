@@ -7,12 +7,12 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Listing {
 	
-	private transient static List<Listing> instances = new ArrayList<Listing>();
+	private transient static ArrayList<Listing> instances = new ArrayList<Listing>();
 
 	public enum listingType {
 		LISTING,
@@ -38,8 +38,11 @@ public class Listing {
 		}
 		this.tradeItem = tradeItem;
 		
+		ItemMeta itemMeta = this.itemBeingSold.getItemMeta();
+		itemMeta.setLore(new ArrayList<String>());
+		this.itemBeingSold.setItemMeta(itemMeta);
+		
 		instances.add(this);
-		Listing.saveListings();
 	}
 	
 	// ------------------------------------------------------------------------ Save and Load
@@ -49,14 +52,18 @@ public class Listing {
 	}
 	
 	public static void loadListings() {
-		instances.clear();
+		instances = new ArrayList<Listing>();
 		Database.load();
 	}
 	
 	// ------------------------------------------------------------------------ Get Listings (instances)
 	
 	public static List<Listing> getListings() {
-		return instances;
+		List<Listing> list = new ArrayList<Listing>();
+		for (Listing listing : instances) {
+			list.add(listing);
+		}
+		return list;
 	}
 	
 	// ------------------------------------------------------------------------ Get Listing Type
@@ -91,12 +98,9 @@ public class Listing {
 	
 	// ------------------------------------------------------------------------ Confirm / Buy
 	
-	public void purchase(Player player) {
-		
-	}
-	
 	public void deleteListing() {
 		instances.remove(this);
-		System.gc();
+		saveListings();
+		loadListings();
 	}
 }
