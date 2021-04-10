@@ -42,8 +42,8 @@ public class MyListings implements InventoryHolder {
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		
 		if (pages > 1.0) { // if the size of the list is 21 or greater, show buttons for changing pages
-			inv.setItem(9, Main.createItem("Previous Page", Material.IRON_HOE));
-			inv.setItem(18, Main.createItem("Next Page", Material.ARROW));
+			inv.setItem(9, Main.createItem("§aPrevious Page", Material.IRON_HOE));
+			inv.setItem(18, Main.createItem("§aNext Page", Material.ARROW));
 		}
 		goToPage(currentPage);
 	}

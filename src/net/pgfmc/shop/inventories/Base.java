@@ -57,7 +57,7 @@ public class Base implements InventoryHolder {
 			}
 		}
 		
-		inv.setItem(46, Main.createItemWithLore("§eBalance", Material.EMERALD, Main.createLore("0 Bits")));
+		inv.setItem(46, createItemWithLore("§eBalance", Material.EMERALD, createLore("§r§bClick here to view what You've Earned!")));
 		
 		// I'm going to try to make a "universal" language where an arrow would stand as "next", then a hoe would stand as "previous"
 		// like with pages
@@ -65,8 +65,8 @@ public class Base implements InventoryHolder {
 		// slimeball = "confirm"
 		
 		if (pages > 1) { // ------------ if the amount of listings is more than 36, then it allows for more pages
-			inv.setItem(48, Main.createItem("§aPrevious", Material.IRON_HOE));
-			inv.setItem(50, Main.createItem("§aNext", Material.ARROW));
+			inv.setItem(48, Main.createItem("§aPrevious Page", Material.IRON_HOE));
+			inv.setItem(50, Main.createItem("§aNext Page", Material.ARROW));
 		}
 		
 		inv.setItem(49, Main.createItem("§2Refresh", Material.SUNFLOWER));
@@ -102,6 +102,23 @@ public class Base implements InventoryHolder {
 			currentPage--;
 			goToPage(currentPage);
 		}
+	}
+	
+	private static ItemStack createItemWithLore(String name, Material mat, List<String> lore) // function for creating a new item with 
+	{
+		ItemStack item = new ItemStack(mat, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(name);
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public static List<String> createLore(String line1) { // Creates a List<String> that represents lore // I want to be organized and not have this code for every ItemStack I want to create with a lore  -.-
+		
+		List<String> lore = new ArrayList<String>();
+		lore.add(line1);
+		return lore;
 	}
 	
 	@Override

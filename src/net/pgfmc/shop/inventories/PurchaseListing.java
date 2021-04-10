@@ -46,11 +46,11 @@ public class PurchaseListing implements InventoryHolder {
 		itemMeta = lst.getTrade().getItemMeta();
 		
 		List<String> list = new ArrayList<String>();
-		list.add("Place the required item in the item slot");
-		list.add("to the left, then take the item you paid for!");
+		list.add("§r§9Place the required item in the item slot");
+		list.add("§r§9to the left, then take the item you paid for!");
 		list.add("");
-		list.add("Required payment: " + lst.getPrice());
-		list.add("Listing Posted by " + lst.getPlayer().getName());
+		list.add("§r§9Required payment: " + lst.getPrice());
+		list.add("§r§9Listing Posted by " + lst.getPlayer().getName());
 		
 		itemMeta.setLore(list);
 		
@@ -75,7 +75,7 @@ public class PurchaseListing implements InventoryHolder {
 		inv.setItem(14, new ItemStack(Material.AIR));
 		isBought = true;
 		
-		ItemStack ironBars = Main.createItem("Item has been taken!", Material.IRON_BARS);
+		ItemStack ironBars = Main.createItem("§r§7Item has been taken!", Material.IRON_BARS);
 		
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() { // in-inventory animations
             @Override

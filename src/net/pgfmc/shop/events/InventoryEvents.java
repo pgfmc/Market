@@ -43,8 +43,8 @@ public class InventoryEvents implements Listener {
 	}
 	
 	@EventHandler
-	public void onInventoryClickBase(InventoryClickEvent e) // Main menu interface manager (list of listings)
-	{
+	public void clickEvent(InventoryClickEvent e) { // manages all InventoryClickEvents, and does special processes for each inventory
+		
 		Inventory inv = e.getClickedInventory();
 		if (inv != null && (inv.getHolder() instanceof Base)) { // If the inventory isn't of Base.java then kick us out
 			
@@ -58,15 +58,12 @@ public class InventoryEvents implements Listener {
 			
 			if (slot >= 0 && slot < 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0
 				// code here for buying an item / offering to buy an item
-				/*Listing listing = Listing.getListings().get(slot);
+				Listing listing = Listing.getListings().get(slot);
 				if (listing.getPlayer() == e.getWhoClicked()) {
-					e.getWhoClicked().openInventory(new ViewOwnListing(listing).getInventory());
+					openShopInventory(new ViewOwnListing(listing), (Player) e.getWhoClicked());
 				} else {
-					
-				}*/
-				
-				openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), (Player) e.getWhoClicked()); // opens a buy interface to buy an item
-				
+					openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), (Player) e.getWhoClicked()); // opens a buy interface to buy an item
+				}
 				return;
 			}
 			
@@ -91,15 +88,8 @@ public class InventoryEvents implements Listener {
 			
 			default:	return;
 			}
-		}
-	}
-	
-	@EventHandler
-	public void onInventoryClickNewlisting(InventoryClickEvent e) { // New Listing interface manager
-		
-		((Player) e.getWhoClicked()).sendMessage(String.valueOf(e.getSlot())); // Debug
-		Inventory inv = e.getClickedInventory();
-		if (inv!= null && (inv.getHolder() instanceof NewListing)) { // If the inventory isn't of NewListing.java then kick us out
+			
+		} else if (inv!= null && (inv.getHolder() instanceof NewListing)) { // If the inventory isn't of NewListing.java then kick us out
 			
 			e.setResult(Result.DENY); // defaults to cancel true :-)
 			int slot = e.getSlot();
@@ -139,14 +129,8 @@ public class InventoryEvents implements Listener {
 						
 			default: 	return;
 			}
-		}
-	}
-	
-	@EventHandler
-	public void onInventoryClickMyListings(InventoryClickEvent e) { // MyListings interface manager
-		
-		Inventory inv = e.getClickedInventory();
-		if (inv != null && (inv.getHolder() instanceof MyListings)) { // If the inventory isn't of MyListings.java then kick us out
+			
+		} else if (inv != null && (inv.getHolder() instanceof MyListings)) { // If the inventory isn't of MyListings.java then kick us out
 			
 			MyListings inventory = (MyListings) inv.getHolder();
 			
@@ -181,147 +165,83 @@ public class InventoryEvents implements Listener {
 						return;
 			default: 	return;
 			}
-		} 
-	}
-	
-	@EventHandler
-	public void onInventoryClickConfirmListing(InventoryClickEvent e) { // buy interface manager
-		
-		Inventory inv = e.getClickedInventory();
-		if (inv == null || !(inv.getHolder() instanceof PurchaseListing)) { return; } // If the inventory isn't of MyListings.java then kick us out
-		
-		PurchaseListing inventory = (PurchaseListing) inv.getHolder();
-		
-		e.setCancelled(true);
-		if (inventory.isBought) {  // if the item has been bought already
 			
+		} else if (inv != null && (inv.getHolder() instanceof PurchaseListing)) { // If the inventory isn't of MyListings.java then kick us out
+		
+			PurchaseListing inventory = (PurchaseListing) inv.getHolder();
+		
 			int slot = e.getSlot();
 			
-			
-			switch(slot) {
-			
-			case 0: 	// Close their inventory
+			if (slot == 0) {
+				e.setCancelled(true);
+				openShopInventory(new Base(), (Player) e.getWhoClicked());
+				return;
 				
-						openShopInventory(new Base(), (Player) e.getWhoClicked());
-						return;
-		
-			default: 	e.setCancelled(true);
-						return;
-			}
-		} else {
-			int slot = e.getSlot();
-			
-			
-			switch(slot) {
-			
-			case 0: 	// Close their inventory
-						
-						openShopInventory(new Base(), (Player) e.getWhoClicked());
-						return;
-						
-			case 11: 	if ((e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE) && inventory.canBuy()) {
-							e.setCancelled(false);
-							inventory.confirmBuy();
-						}
-						return;
-			
-			case 14: 	if ((e.getAction() == InventoryAction.PLACE_ALL || e.getAction() == InventoryAction.PLACE_SOME || e.getAction() == InventoryAction.PLACE_ONE || e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE || e.getAction() == InventoryAction.SWAP_WITH_CURSOR)) {
-							e.setCancelled(false);
-							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-								@Override
-								public void run() {
-									inventory.canBuy();
-						 
-								}
-							}, 2);
-							
-						}
-						
-						return;
-			default: 	e.setCancelled(true);
-						return;
-			}
-		}
-	}
-	
-	
-	@EventHandler
-	public void onInventoryClickMyOwnListing(InventoryClickEvent e) { // buy interface manager
-		
-		Inventory inv = e.getClickedInventory();
-		if (inv == null || !(inv.getHolder() instanceof ViewOwnListing)) { return; } // If the inventory isn't of MyListings.java then kick us out
-		
-		ViewOwnListing inventory = (ViewOwnListing) inv.getHolder();
-		
-		e.setCancelled(true);
-		if (inventory.isTaken) {  // if the item has been bought already
-			
-			int slot = e.getSlot();
-			
-			
-			switch(slot) {
-			
-			case 0: 	// Close their inventory
+			} else if (slot == 11 && !inventory.isBought && inventory.canBuy() && (e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE)) {
+				inventory.confirmBuy();
+				return;
 				
-						openShopInventory(new Base(), (Player) e.getWhoClicked());
-						return;
-		
-			default: 	e.setCancelled(true);
-						return;
+			} else if (slot == 14 && !inventory.isBought && (e.getAction() == InventoryAction.PLACE_ALL || e.getAction() == InventoryAction.PLACE_SOME || e.getAction() == InventoryAction.PLACE_ONE || e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE || e.getAction() == InventoryAction.SWAP_WITH_CURSOR)) {
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+					@Override
+					public void run() {
+						inventory.canBuy();
+					}
+				}, 2);
+				return;
+			} else {
+				e.setCancelled(true);
+				return;
 			}
-		} else {
-			int slot = e.getSlot();
 			
+		} else if (inv != null && (inv.getHolder() instanceof ViewOwnListing)) { // If the inventory isn't of MyListings.java then kick us out
 			
-			switch(slot) {
+			ViewOwnListing inventory = (ViewOwnListing) inv.getHolder();
 			
-			case 0: 	// Close their inventory
 				
-						openShopInventory(new Base(), (Player) e.getWhoClicked());
-						return;
-						
-			case 12: 	if ((e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE)) {
-							e.setCancelled(false);
-							inventory.confirmBuy();
-						}			
-						return;
-			default: 	e.setCancelled(true);
-						return;
-			}
-		}
-	}
-	
-	@EventHandler
-	public void inventoryClickNotifications(InventoryClickEvent e) {
-		
-		Inventory inv = e.getClickedInventory();
-		if (inv == null || !(inv.getHolder() instanceof Notifications)) { return; } // If the inventory isn't of MyListings.java then kick us out
-		
-		e.setCancelled(true);
-		Notifications inventory = (Notifications) inv.getHolder();
-			
-		int slot = e.getSlot();
-		
-		switch(slot) {
-			
-		case 0: 	// Close their inventory
-				
+				int slot = e.getSlot();
+					
+				if (slot == 0) { // ------------------------------------------------- if the feather is clicked to go back
+					e.setCancelled(true);
 					openShopInventory(new Base(), (Player) e.getWhoClicked());
 					return;
-		case 9:		if (inv.getItem(e.getSlot()) != null) { // goes to previous page
-						inventory.flipPage(false);
-					}
+				} else if (slot == 12 && (e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE) && !inventory.isTaken) {
+					
+					inventory.confirmBuy(); // actual hell lol
 					return;
-		case 18: 	if (inv.getItem(e.getSlot()) != null) { // goes to next page
-						inventory.flipPage(true);
-					}
+				} else {
+					e.setCancelled(true);
 					return;
-		
-		default: 	if (e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) { // only if all are picked up at once
-						e.setCancelled(false);
-						inventory.itemTaken(slot);
-					}
-					return;
+				}
+				
+		} else if (inv != null && (inv.getHolder() instanceof Notifications)) { // If the inventory isn't of Notifications.java then kick us out
+				
+			e.setCancelled(true);
+			Notifications inventory = (Notifications) inv.getHolder();
+				
+			int slot = e.getSlot();
+			
+			switch(slot) {
+				
+			case 0: 	// Close their inventory
+					
+						openShopInventory(new Base(), (Player) e.getWhoClicked());
+						return;
+			case 9:		if (inv.getItem(e.getSlot()) != null) { // goes to previous page
+							inventory.flipPage(false);
+						}
+						return;
+			case 18: 		if (inv.getItem(e.getSlot()) != null) { // goes to next page
+							inventory.flipPage(true);
+						}
+						return;
+			
+			default: 	if (e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) { // only if all are picked up at once
+							e.setCancelled(false);
+							inventory.itemTaken(slot);
+						}
+						return;
+			}
 		}
 	}
 	

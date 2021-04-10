@@ -28,7 +28,7 @@ public class ViewOwnListing implements InventoryHolder {
 		
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		inv.setItem(12, Main.switchLore(listing.getItem(), new ArrayList<String>()));
-		inv.setItem(14, Main.createItem("take the item to delete the Listing!", Material.PAPER));
+		inv.setItem(14, Main.createItem("§r§cTake the Item to Delete the Listing!", Material.PAPER));
 	}
 	
 	public Listing getListing() {
@@ -41,7 +41,7 @@ public class ViewOwnListing implements InventoryHolder {
 		inv.setItem(14, new ItemStack(Material.AIR));
 		listing.deleteListing();
 		
-		ItemStack ironBars = Main.createItem("Item has been taken!", Material.IRON_BARS);
+		ItemStack ironBars = Main.createItem("§r§7Item has been taken!", Material.IRON_BARS);
 		
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() { // in-inventory animations
             @Override

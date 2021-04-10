@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,13 +20,27 @@ public class Main extends JavaPlugin {
 	public static Main plugin;
 	public static List<List<Object>> listings = new ArrayList<>();
 	
-	File file = new File(getDataFolder() + File.separator + "database.yml"); // Creates a File object
-	FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
+	
 	
 	@Override
 	public void onEnable()
 	{
+		
 		plugin = this;
+		
+		File file = new File(getDataFolder() + File.separator + "database.yml"); // Creates a File object
+		
+		if (!file.exists())
+		{
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		file = new File(getDataFolder() + File.separator + "playerdata.yml"); // Creates a File object
 		
 		if (!file.exists())
 		{
@@ -45,7 +58,24 @@ public class Main extends JavaPlugin {
 		
 		Listing.loadListings();
 		
-		
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+            @Override
+            public void run() {
+            	
+            	//restartBatch();
+            	//Bukkit.getServer().shutdown();
+            }
+        }, 100);
+	}
+	
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void restartBatch() {
+		try {
+			Runtime.getRuntime().exec("E:/Games/Minecraft(far)/Spigot Server/plugins/restart.bat");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	// functions used all around the place in this pluign :)
@@ -60,24 +90,6 @@ public class Main extends JavaPlugin {
 		return item;
 	}
 	
-	
-	public static ItemStack createItemWithLore(String name, Material mat, List<String> lore) // function for creating a new item with 
-	{
-		ItemStack item = new ItemStack(mat, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(name);
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		return item;
-	}
-	
-	public static List<String> createLore(String line1) { // Creates a List<String> that represents lore // I want to be organized and not have this code for every ItemStack I want to create with a lore  -.-
-	
-		List<String> lore = new ArrayList<String>();
-		lore.add(line1);
-		return lore;
-	}
-	
 	public static ItemStack switchLore(ItemStack item, List<String> lore) { // changes the lore of an item
 		
 		ItemMeta itemMeta = item.getItemMeta();
@@ -86,28 +98,17 @@ public class Main extends JavaPlugin {
 		return item;
 	}
 	
-public static ItemStack switchLore(ItemStack item, String lore) { // changes the lore of an item using a string as input
-		
-		ItemMeta itemMeta = item.getItemMeta();
-		
-		List<String> list = new ArrayList<String>();
-		list.add(lore);
-		itemMeta.setLore(list);
-		item.setItemMeta(itemMeta);
-		return item;
-	}
-	
 	public static String makePlural(ItemStack itemStack) { // takes an item, and then represents it in a string || as in: "1 diamond" or "4 Dark Prismarine Blocks" || automatically 
 		
 		String name = Main.getName(itemStack.getType()); // --------- plural stuff
 		if (itemStack.getAmount() == 1) {
-			return(String.valueOf(itemStack.getAmount()) + " " + name);
+			return("§b" + String.valueOf(itemStack.getAmount()) + " " + name);
 		} else {
 			if (name.endsWith("s")) {
 				
-				return(String.valueOf(itemStack.getAmount()) + " " + name + "es");
+				return("§b" + String.valueOf(itemStack.getAmount()) + " " + name + "es");
 			} else {
-				return(String.valueOf(itemStack.getAmount()) + " " + name + "s");
+				return("§b" + String.valueOf(itemStack.getAmount()) + " " + name + "s");
 			}
 		}
 	}

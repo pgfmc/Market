@@ -1,14 +1,12 @@
 package net.pgfmc.shop;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -31,21 +29,6 @@ public class Database {
 		
 		File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
 		FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
-		
-		if (file.exists()) {
-			try {
-				database.load(file); // loads file (duh)
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		
 		for (String key : database.getKeys(false)) {
 			database.set(key, null);
@@ -71,18 +54,6 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		if (!file.exists()) // If the file doesn't exist, create one
-		{
-			try {
-				file.createNewFile(); // makes a new file
-				
-			} catch (IOException e) {
-				e.printStackTrace(); // catch
-			}
-		}
-		
-		
 	}
 	
 	public static ArrayList<Listing> load() { // ------------- loads all listings
@@ -119,21 +90,6 @@ public class Database {
 		File file = new File(Main.plugin.getDataFolder() + File.separator + "playerdata.yml"); // Creates a File object
 		FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
 		
-		if (file.exists()) {
-			try {
-				database.load(file); // loads file (duh)
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 		database.set(player.getUniqueId().toString(), items);
 		// save file
 		
@@ -142,16 +98,6 @@ public class Database {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		if (!file.exists()) // If the file doesn't exist, create one
-		{
-			try {
-				file.createNewFile(); // makes a new file
-				
-			} catch (IOException e) {
-				e.printStackTrace(); // catch
-			}
 		}
 	}
 	
