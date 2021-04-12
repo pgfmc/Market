@@ -58,24 +58,21 @@ public class Main extends JavaPlugin {
 		
 		Listing.loadListings();
 		
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() { // auto shut down server
             @Override
             public void run() {
             	
-            	//restartBatch();
-            	//Bukkit.getServer().shutdown();
+            	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                    	Bukkit.broadcastMessage("§6Restarting Server...");
+                    	Bukkit.getServer().shutdown();
+                    }
+                }, 12000); // 12000
+            	
+            	Bukkit.broadcastMessage("§6Server Restarts in 10 Minutes!");
             }
-        }, 100);
-	}
-	
-	@SuppressWarnings("unused")
-	@Deprecated
-	private void restartBatch() {
-		try {
-			Runtime.getRuntime().exec("E:/Games/Minecraft(far)/Spigot Server/plugins/restart.bat");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        }, 1716000); // 1716000
 	}
 	
 	// functions used all around the place in this pluign :)
