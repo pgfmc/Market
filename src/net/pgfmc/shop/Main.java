@@ -2,7 +2,6 @@ package net.pgfmc.shop;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -18,9 +17,6 @@ import net.pgfmc.shop.events.PlayerEvents;
 public class Main extends JavaPlugin {
 	
 	public static Main plugin;
-	public static List<List<Object>> listings = new ArrayList<>();
-	
-	
 	
 	@Override
 	public void onEnable()

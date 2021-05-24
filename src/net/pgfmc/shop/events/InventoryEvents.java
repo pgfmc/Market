@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -34,7 +35,6 @@ public class InventoryEvents implements Listener {
             @Override
             public void run() {
             	
-            	
             	player.closeInventory();
 				player.openInventory(holder.getInventory());
 				 // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
@@ -47,6 +47,11 @@ public class InventoryEvents implements Listener {
 		
 		Inventory inv = e.getClickedInventory();
 		if (inv != null && (inv.getHolder() instanceof Base)) { // If the inventory isn't of Base.java then kick us out
+			
+			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+				e.setCancelled(true);
+				return;
+			}
 			
 			Base inventory = (Base) inv.getHolder();
 			
@@ -91,6 +96,11 @@ public class InventoryEvents implements Listener {
 			
 		} else if (inv!= null && (inv.getHolder() instanceof NewListing)) { // If the inventory isn't of NewListing.java then kick us out
 			
+			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+				e.setCancelled(true);
+				return;
+			}
+			
 			e.setResult(Result.DENY); // defaults to cancel true :-)
 			int slot = e.getSlot();
 			NewListing inventory = (NewListing) inv.getHolder();
@@ -125,12 +135,18 @@ public class InventoryEvents implements Listener {
 						Listing.saveListings(); // saves listing
 			
 						e.getWhoClicked().closeInventory(); // Close their inventory
+						openShopInventory(new Base(), (Player) e.getWhoClicked());
 						return;
 						
 			default: 	return;
 			}
 			
 		} else if (inv != null && (inv.getHolder() instanceof MyListings)) { // If the inventory isn't of MyListings.java then kick us out
+			
+			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+				e.setCancelled(true);
+				return;
+			}
 			
 			MyListings inventory = (MyListings) inv.getHolder();
 			
@@ -167,6 +183,11 @@ public class InventoryEvents implements Listener {
 			}
 			
 		} else if (inv != null && (inv.getHolder() instanceof PurchaseListing)) { // If the inventory isn't of MyListings.java then kick us out
+			
+			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+				e.setCancelled(true);
+				return;
+			}
 		
 			PurchaseListing inventory = (PurchaseListing) inv.getHolder();
 		
@@ -196,6 +217,11 @@ public class InventoryEvents implements Listener {
 			
 		} else if (inv != null && (inv.getHolder() instanceof ViewOwnListing)) { // If the inventory isn't of MyListings.java then kick us out
 			
+			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+				e.setCancelled(true);
+				return;
+			}
+			
 			ViewOwnListing inventory = (ViewOwnListing) inv.getHolder();
 			
 				
@@ -215,6 +241,11 @@ public class InventoryEvents implements Listener {
 				}
 				
 		} else if (inv != null && (inv.getHolder() instanceof Notifications)) { // If the inventory isn't of Notifications.java then kick us out
+			
+			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+				e.setCancelled(true);
+				return;
+			}
 				
 			e.setCancelled(true);
 			Notifications inventory = (Notifications) inv.getHolder();

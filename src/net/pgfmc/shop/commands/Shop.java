@@ -1,5 +1,6 @@
 package net.pgfmc.shop.commands;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +13,7 @@ public class Shop implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
-		if (!(sender instanceof Player))
+		if (!(sender instanceof Player) || ((Player) sender).getGameMode() != GameMode.SURVIVAL)
 		{
 			sender.sendMessage("§cYou cannot execute this command."); // lol
 			return true;
