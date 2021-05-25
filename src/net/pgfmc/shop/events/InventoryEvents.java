@@ -48,7 +48,8 @@ public class InventoryEvents implements Listener {
 		Inventory inv = e.getClickedInventory();
 		Player player = (Player) e.getWhoClicked();
 		
-		if ((e.getInventory().getHolder() instanceof Base || e.getInventory().getHolder() instanceof NewListing || e.getInventory().getHolder() instanceof MyListings || e.getInventory().getHolder() instanceof PurchaseListing || e.getInventory().getHolder() instanceof ViewOwnListing) && (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT)) {
+		InventoryHolder invHolder = e.getInventory().getHolder();
+		if ((invHolder instanceof Base || invHolder instanceof NewListing || invHolder instanceof MyListings || invHolder instanceof PurchaseListing || invHolder instanceof ViewOwnListing) && (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT)) {
 			e.setCancelled(true);
 			return;
 		}
