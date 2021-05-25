@@ -29,11 +29,6 @@ public class NewListing implements InventoryHolder {
 	{
 		inv = Bukkit.createInventory(this, 27, "New Listing");
 		
-		invBuilder();
-	}
-	
-	private void invBuilder() {
-		
 		inv.setItem(0, Main.createItem("§eCancel", Material.FEATHER));
 		inv.setItem(3, Main.createItem("§aItem Goes Here >>", Material.NETHER_STAR));
 		inv.setItem(5, Main.createItem("§a<< Item Goes Here", Material.NETHER_STAR));

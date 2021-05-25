@@ -34,11 +34,6 @@ public class MyListings implements InventoryHolder {
 
 		pages = (((double) list.size()) + 1.0) / 21.0;
 		
-		invBuilder();
-	}
-	
-	private void invBuilder() {
-		
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		
 		if (pages > 1.0) { // if the size of the list is 21 or greater, show buttons for changing pages

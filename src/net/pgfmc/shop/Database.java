@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /*
@@ -72,12 +72,10 @@ public class Database {
 			// i just decided to settle on this monstrosity lol
 		}
 		return listings;
-		
-		
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<ItemStack> getPlayerMoney(Player player) { // ---------------------- gets payment a player has gotten
+	public static List<ItemStack> getPlayerMoney(OfflinePlayer player) { // ---------------------- gets payment a player has gotten
 		
 		File file = new File(Main.plugin.getDataFolder() + File.separator + "playerdata.yml"); // Creates a File object
 		FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
@@ -85,7 +83,7 @@ public class Database {
 		return (List<ItemStack>) database.getList(player.getUniqueId().toString());
 	}
 	
-	public static void setPlayerMoney(Player player, List<ItemStack> items) { // sets the 
+	public static void setPlayerMoney(OfflinePlayer player, List<ItemStack> items) { // sets the 
 		
 		File file = new File(Main.plugin.getDataFolder() + File.separator + "playerdata.yml"); // Creates a File object
 		FileConfiguration database = YamlConfiguration.loadConfiguration(file); // Turns the File object into YAML and loads data
@@ -101,7 +99,7 @@ public class Database {
 		}
 	}
 	
-	public static void addMoneytoPlayer(Player player, ItemStack item) {
+	public static void addMoneytoPlayer(OfflinePlayer player, ItemStack item) {
 		
 		List<ItemStack> items = getPlayerMoney(player);
 		if (items == null) {

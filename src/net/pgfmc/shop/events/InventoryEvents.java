@@ -17,10 +17,10 @@ import org.bukkit.inventory.InventoryHolder;
 
 import net.pgfmc.shop.Listing;
 import net.pgfmc.shop.Main;
-import net.pgfmc.shop.Notifications;
 import net.pgfmc.shop.inventories.Base;
 import net.pgfmc.shop.inventories.MyListings;
 import net.pgfmc.shop.inventories.NewListing;
+import net.pgfmc.shop.inventories.Notifications;
 import net.pgfmc.shop.inventories.PurchaseListing;
 import net.pgfmc.shop.inventories.ViewOwnListing;
 
@@ -46,12 +46,14 @@ public class InventoryEvents implements Listener {
 	public void clickEvent(InventoryClickEvent e) { // manages all InventoryClickEvents, and does special processes for each inventory
 		
 		Inventory inv = e.getClickedInventory();
+		Player player = (Player) e.getWhoClicked();
+		
+		if ((e.getInventory().getHolder() instanceof Base || e.getInventory().getHolder() instanceof NewListing || e.getInventory().getHolder() instanceof MyListings || e.getInventory().getHolder() instanceof PurchaseListing || e.getInventory().getHolder() instanceof ViewOwnListing) && (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT)) {
+			e.setCancelled(true);
+			return;
+		}
+		
 		if (inv != null && (inv.getHolder() instanceof Base)) { // If the inventory isn't of Base.java then kick us out
-			
-			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
-				e.setCancelled(true);
-				return;
-			}
 			
 			Base inventory = (Base) inv.getHolder();
 			
@@ -64,31 +66,31 @@ public class InventoryEvents implements Listener {
 			if (slot >= 0 && slot < 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0
 				// code here for buying an item / offering to buy an item
 				Listing listing = Listing.getListings().get(slot);
-				if (listing.getPlayer() == e.getWhoClicked()) {
-					openShopInventory(new ViewOwnListing(listing), (Player) e.getWhoClicked());
+				if (listing.getPlayer() == player) {
+					openShopInventory(new ViewOwnListing(listing), player);
 				} else {
-					openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), (Player) e.getWhoClicked()); // opens a buy interface to buy an item
+					openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), player); // opens a buy interface to buy an item
 				}
 				return;
 			}
 			
 			switch(slot) { // switch statement
 				
-			case 46: 	openShopInventory(new Notifications((Player) e.getWhoClicked()), (Player) e.getWhoClicked());
+			case 46: 	openShopInventory(new Notifications(player), player);
 				return; // Emerald
 			
 			case 48: 	inventory.flipPage(false);
 				return; // Iron hoe
 			
-			case 49: 	openShopInventory(new Base(), (Player) e.getWhoClicked()); // Open a new instance of the inventory
+			case 49: 	openShopInventory(new Base(), player); // Open a new instance of the inventory
 						return;
 			
 			case 50:	return; // Feather // idk still idk
 			
-			case 52:	openShopInventory(new NewListing(), (Player) e.getWhoClicked());// Opens NewListing inventory (Cast to Player might be unnecessary but I don't know)
+			case 52:	openShopInventory(new NewListing(), player);// Opens NewListing inventory (Cast to Player might be unnecessary but I don't know)
 						return;
 			
-			case 53:	openShopInventory(new MyListings((Player) e.getWhoClicked()), (Player) e.getWhoClicked()); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
+			case 53:	openShopInventory(new MyListings(player), player); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
 						return;
 			
 			default:	return;
@@ -107,7 +109,7 @@ public class InventoryEvents implements Listener {
 			
 			switch(slot) { // switch statement
 			
-			case 0:		openShopInventory(new Base(), (Player) e.getWhoClicked()); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
+			case 0:		openShopInventory(new Base(), player); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
 						return;
 			case 4: 	e.setResult(Result.ALLOW);
 						return;
@@ -130,23 +132,18 @@ public class InventoryEvents implements Listener {
 							return;
 						}
 						
-						inventory.finalizeListing((Player) e.getWhoClicked());
+						inventory.finalizeListing(player);
 						inventory.setClosing(true);
 						Listing.saveListings(); // saves listing
 			
-						e.getWhoClicked().closeInventory(); // Close their inventory
-						openShopInventory(new Base(), (Player) e.getWhoClicked());
+						player.closeInventory(); // Close their inventory
+						openShopInventory(new Base(), player);
 						return;
 						
 			default: 	return;
 			}
 			
 		} else if (inv != null && (inv.getHolder() instanceof MyListings)) { // If the inventory isn't of MyListings.java then kick us out
-			
-			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
-				e.setCancelled(true);
-				return;
-			}
 			
 			MyListings inventory = (MyListings) inv.getHolder();
 			
@@ -157,18 +154,18 @@ public class InventoryEvents implements Listener {
 			List<Listing> listings = inventory.getListings();
 			
 			if (slot >= 2 && slot <= 8) { // ----------sets Listings in the interface
-				openShopInventory(new ViewOwnListing(listings.get((slot - 2) + (page - 1) * 21)), (Player) e.getWhoClicked());
+				openShopInventory(new ViewOwnListing(listings.get((slot - 2) + (page - 1) * 21)), player);
 			} else if (slot >= 11 && slot <= 17) {
-				openShopInventory(new ViewOwnListing(listings.get((slot - 4) + (page - 1) * 21)), (Player) e.getWhoClicked());
+				openShopInventory(new ViewOwnListing(listings.get((slot - 4) + (page - 1) * 21)), player);
 			} else if (slot >= 20 && slot <= 26) {
-				openShopInventory(new ViewOwnListing(listings.get((slot - 6) + (page - 1) * 21)), (Player) e.getWhoClicked());
+				openShopInventory(new ViewOwnListing(listings.get((slot - 6) + (page - 1) * 21)), player);
 			}
 			
 			switch(slot) {
 			
 			case 0: 	// Close their inventory
 			
-						openShopInventory(new Base(), (Player) e.getWhoClicked()); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
+						openShopInventory(new Base(), player); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
 						return;
 						
 			case 9:		if (inv.getItem(e.getSlot()) != null) { // goes to previous page
@@ -184,22 +181,17 @@ public class InventoryEvents implements Listener {
 			
 		} else if (inv != null && (inv.getHolder() instanceof PurchaseListing)) { // If the inventory isn't of MyListings.java then kick us out
 			
-			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
-				e.setCancelled(true);
-				return;
-			}
-		
 			PurchaseListing inventory = (PurchaseListing) inv.getHolder();
 		
 			int slot = e.getSlot();
 			
 			if (slot == 0) {
 				e.setCancelled(true);
-				openShopInventory(new Base(), (Player) e.getWhoClicked());
+				openShopInventory(new Base(), player);
 				return;
 				
 			} else if (slot == 11 && !inventory.isBought && inventory.canBuy() && (e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE)) {
-				inventory.confirmBuy();
+				inventory.confirmBuy(player);
 				return;
 				
 			} else if (slot == 14 && !inventory.isBought && (e.getAction() == InventoryAction.PLACE_ALL || e.getAction() == InventoryAction.PLACE_SOME || e.getAction() == InventoryAction.PLACE_ONE || e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE || e.getAction() == InventoryAction.SWAP_WITH_CURSOR)) {
@@ -217,11 +209,6 @@ public class InventoryEvents implements Listener {
 			
 		} else if (inv != null && (inv.getHolder() instanceof ViewOwnListing)) { // If the inventory isn't of MyListings.java then kick us out
 			
-			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
-				e.setCancelled(true);
-				return;
-			}
-			
 			ViewOwnListing inventory = (ViewOwnListing) inv.getHolder();
 			
 				
@@ -229,7 +216,7 @@ public class InventoryEvents implements Listener {
 					
 				if (slot == 0) { // ------------------------------------------------- if the feather is clicked to go back
 					e.setCancelled(true);
-					openShopInventory(new Base(), (Player) e.getWhoClicked());
+					openShopInventory(new Base(), player);
 					return;
 				} else if (slot == 12 && (e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE) && !inventory.isTaken) {
 					
@@ -242,11 +229,6 @@ public class InventoryEvents implements Listener {
 				
 		} else if (inv != null && (inv.getHolder() instanceof Notifications)) { // If the inventory isn't of Notifications.java then kick us out
 			
-			if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
-				e.setCancelled(true);
-				return;
-			}
-				
 			e.setCancelled(true);
 			Notifications inventory = (Notifications) inv.getHolder();
 				
@@ -256,7 +238,7 @@ public class InventoryEvents implements Listener {
 				
 			case 0: 	// Close their inventory
 					
-						openShopInventory(new Base(), (Player) e.getWhoClicked());
+						openShopInventory(new Base(), player);
 						return;
 			case 9:		if (inv.getItem(e.getSlot()) != null) { // goes to previous page
 							inventory.flipPage(false);

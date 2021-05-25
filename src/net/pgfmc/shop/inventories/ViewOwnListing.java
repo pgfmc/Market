@@ -21,11 +21,6 @@ public class ViewOwnListing implements InventoryHolder {
 		this.listing = listing;
 		inv = Bukkit.createInventory(this, 27, Main.getName(listing.getItem().getType()));
 		
-		invBuilder();
-	}
-	
-	private void invBuilder() {
-		
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		inv.setItem(12, Main.switchLore(listing.getItem(), new ArrayList<String>()));
 		inv.setItem(14, Main.createItem("§r§cTake the Item to Delete the Listing!", Material.PAPER));

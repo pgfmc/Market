@@ -1,4 +1,4 @@
-package net.pgfmc.shop;
+package net.pgfmc.shop.inventories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,9 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.pgfmc.shop.Database;
+import net.pgfmc.shop.Main;
+
 public class Notifications implements InventoryHolder {
 	
 	Inventory inv;
@@ -18,7 +21,7 @@ public class Notifications implements InventoryHolder {
 	List<ItemStack> items = new ArrayList<ItemStack>();
 	List<Notifications> instances = new ArrayList<Notifications>();
 	int currentPage = 1;
-	final int pages;
+	int pages;
 	
 	public Notifications(Player player) {
 		inv = Bukkit.createInventory(this, 27, "My Money");
@@ -26,11 +29,9 @@ public class Notifications implements InventoryHolder {
 		this.player = player;
 		instances.add(this);
 		pages = ((int) Math.ceil((items.size() + 1) / 21));
-		
-		invBuilder();
-	}
-	
-	private void invBuilder() {
+		if (pages < 1) {
+			pages = 1;
+		}
 		
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		

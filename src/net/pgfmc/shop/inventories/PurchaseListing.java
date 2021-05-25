@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -22,17 +23,10 @@ public class PurchaseListing implements InventoryHolder {
 	public boolean isBought = false;
 	public boolean closing = false;
 	
-	
-	
 	public PurchaseListing(Listing listing) { // constructor (creates menu for buying an item)
 		
 		lst = listing;
 		inv = Bukkit.createInventory(this, 27, "");
-		invBuilder();
-		
-	}
-	
-	private void invBuilder() {
 		
 		inv.setItem(0, Main.createItem("§eCancel", Material.FEATHER));
 		
@@ -68,11 +62,29 @@ public class PurchaseListing implements InventoryHolder {
 		}
 	}
 	
-	public void confirmBuy() { // clears the inventory, and makes it to where all actions in the inventory are cancelled.
+	public void confirmBuy(Player player) { // clears the inventory, and makes it to where all actions in the inventory are cancelled.
 		
-		Database.addMoneytoPlayer((Player) lst.getPlayer(), lst.getTrade());
+		ItemStack item = inv.getItem(14);
+		Integer lstItem = lst.getItem().getAmount();
+		
+		if (item.getAmount() == lstItem) {
+			inv.setItem(14, new ItemStack(Material.AIR));
+		} else if (item.getAmount() > lstItem) {
+			item.setAmount(item.getAmount() - lstItem);
+			player.getInventory().addItem(item);
+			inv.setItem(14, new ItemStack(Material.AIR));
+		} else {
+			System.out.println("ERROR: PurchaseListing.confirmBuy was run, while the listing wasn't able to buy from.");
+			return;
+		}
+		
+		Database.addMoneytoPlayer(lst.getPlayer(), lst.getTrade());
 		lst.deleteListing();
-		inv.setItem(14, new ItemStack(Material.AIR));
+		if (lst.getPlayer() instanceof Player) {
+			((Player) lst.getPlayer()).sendMessage("Someone has bought from you on the shop!");
+			((Player) lst.getPlayer()).playSound(((Player) lst.getPlayer()).getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+		}
+		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 		isBought = true;
 		
 		ItemStack ironBars = Main.createItem("§r§7Item has been taken!", Material.IRON_BARS);
@@ -116,7 +128,7 @@ public class PurchaseListing implements InventoryHolder {
 	
 	public boolean canBuy() { // returns if the listing can be bought
 
-		if (inv.getItem(14) != null && inv.getItem(14).getType() == lst.getTrade().getType() && inv.getItem(14).getAmount() == lst.getTrade().getAmount()) {
+		if (inv.getItem(14) != null && inv.getItem(14).getType() == lst.getTrade().getType() && inv.getItem(14).getAmount() >= lst.getTrade().getAmount()) {
 			return true;
 		}
 		return false;

@@ -54,11 +54,11 @@ public class Main extends JavaPlugin {
 		
 		Listing.loadListings();
 		
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() { // auto shut down server
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { // auto shut down server
             @Override
             public void run() {
             	
-            	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+            	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
                     public void run() {
                     	Bukkit.broadcastMessage("§6Restarting Server...");
