@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -35,6 +36,7 @@ public class ViewOwnListing implements InventoryHolder {
 		isTaken = true;
 		inv.setItem(14, new ItemStack(Material.AIR));
 		listing.deleteListing();
+		listing.getPlayer().getPlayer().playSound(listing.getPlayer().getPlayer().getLocation(), Sound.BLOCK_ANVIL_FALL, 1, 1);
 		
 		ItemStack ironBars = Main.createItem("§r§7Item has been taken!", Material.IRON_BARS);
 		
