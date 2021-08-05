@@ -20,7 +20,7 @@ public class MyListings implements InventoryHolder {
 	
 	private final Inventory inv;
 	private final List<Listing> list = new ArrayList<Listing>();
-	private final double pages;
+	// private final double pages;
 	private transient int currentPage = 1;
 	
 	
@@ -32,11 +32,11 @@ public class MyListings implements InventoryHolder {
 			}
 		}
 
-		pages = (((double) list.size()) + 1.0) / 21.0;
+		// pages = (((double) list.size()) + 1.0) / 21.0; again, why
 		
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		
-		if (pages > 1.0) { // if the size of the list is 21 or greater, show buttons for changing pages
+		if (list.size() >= 21) { // if the size of the list is 21 or greater, show buttons for changing pages
 			inv.setItem(9, Main.createItem("§aPrevious Page", Material.IRON_HOE));
 			inv.setItem(18, Main.createItem("§aNext Page", Material.ARROW));
 		}
@@ -44,6 +44,11 @@ public class MyListings implements InventoryHolder {
 	}
 	
 	public void goToPage(int page) { // interprets the listing data, and adds each listing to the interface
+		
+		if (list.size() <= 21 * (currentPage - 1))
+		{
+			currentPage--; // No blank pages pls
+		}
 		
 		for (int index = 0; index < 20; index++) {
 			ItemStack itemStack = null;
@@ -59,27 +64,90 @@ public class MyListings implements InventoryHolder {
 				
 				
 				switch(index) {
-				case 0: inv.setItem(2, itemStack);
-				case 1: inv.setItem(3, itemStack);
-				case 2: inv.setItem(4, itemStack);
-				case 3: inv.setItem(5, itemStack);
-				case 4: inv.setItem(6, itemStack);
-				case 5: inv.setItem(7, itemStack);
-				case 6: inv.setItem(8, itemStack);
-				case 7: inv.setItem(11, itemStack);
-				case 8: inv.setItem(12, itemStack);
-				case 9: inv.setItem(13, itemStack);
-				case 10: inv.setItem(14, itemStack);
-				case 11: inv.setItem(15, itemStack);
-				case 12: inv.setItem(16, itemStack);
-				case 13: inv.setItem(17, itemStack);
-				case 14: inv.setItem(20, itemStack);
-				case 15: inv.setItem(21, itemStack);
-				case 16: inv.setItem(22, itemStack);
-				case 17: inv.setItem(23, itemStack);
-				case 18: inv.setItem(24, itemStack);
-				case 19: inv.setItem(25, itemStack);
-				case 20: inv.setItem(26, itemStack);
+				case 0:
+				inv.setItem(2, itemStack);
+				return;
+				
+				case 1:
+				inv.setItem(3, itemStack);
+				return;
+				
+				case 2:
+				inv.setItem(4, itemStack);
+				return;
+				
+				case 3:
+				inv.setItem(5, itemStack);
+				return;
+				
+				case 4:
+				inv.setItem(6, itemStack);
+				return;
+				
+				case 5:
+				inv.setItem(7, itemStack);
+				return;
+				
+				case 6:
+				inv.setItem(8, itemStack);
+				return;
+				
+				case 7:
+				inv.setItem(11, itemStack);
+				return;
+				
+				case 8: 
+				inv.setItem(12, itemStack);
+				return;
+				
+				case 9:
+				inv.setItem(13, itemStack);
+				return;
+				
+				case 10:
+				inv.setItem(14, itemStack);
+				return;
+				
+				case 11:
+				inv.setItem(15, itemStack);
+				return;
+				
+				case 12:
+				inv.setItem(16, itemStack);
+				return;
+				
+				case 13:
+				inv.setItem(17, itemStack);
+				return;
+				
+				case 14:
+				inv.setItem(20, itemStack);
+				return;
+				
+				case 15:
+				inv.setItem(21, itemStack);
+				return;
+				
+				case 16:
+				inv.setItem(22, itemStack);
+				return;
+				
+				case 17:
+				inv.setItem(23, itemStack);
+				return;
+				
+				case 18:
+				inv.setItem(24, itemStack);
+				return;
+				
+				case 19:
+				inv.setItem(25, itemStack);
+				return;
+				
+				case 20:
+				inv.setItem(26, itemStack);
+				return;
+				
 				}
 			}
 		}
@@ -89,16 +157,10 @@ public class MyListings implements InventoryHolder {
 		
 		if (advance) {
 			currentPage++;
-			if ((double) currentPage > pages + 1.0) {
-				currentPage = (int) Math.ceil(pages);
-			}
 			goToPage(currentPage);
 			
 		} else {
 			currentPage--;
-			if ((double) currentPage < 1) {
-				currentPage = 1;
-			}
 			goToPage(currentPage);
 		}
 	}

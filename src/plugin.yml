@@ -1,6 +1,6 @@
 name: Shop
-version: 1.1.0
-api-version: 1.16
+version: 2.3.2
+api-version: 1.17
 author: bk
 main: net.pgfmc.shop.Main
 description: Implements a global market to buy and sell

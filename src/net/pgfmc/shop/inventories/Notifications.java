@@ -21,21 +21,23 @@ public class Notifications implements InventoryHolder {
 	List<ItemStack> items = new ArrayList<ItemStack>();
 	List<Notifications> instances = new ArrayList<Notifications>();
 	int currentPage = 1;
-	int pages;
+	// int pages;
 	
 	public Notifications(Player player) {
 		inv = Bukkit.createInventory(this, 27, "My Money");
 		items = Database.getPlayerMoney(player);
 		this.player = player;
 		instances.add(this);
+		/*
 		pages = ((int) Math.ceil((items.size() + 1) / 21));
 		if (pages < 1) {
 			pages = 1;
 		}
+		*/
 		
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		
-		if (pages > 1) { // if the size of the list is 21 or greater, show buttons for changing pages
+		if (items.size() >= 21) { // if the size of the list is 21 or greater, show buttons for changing pages
 			inv.setItem(9, Main.createItem("§aPrevious Page", Material.IRON_HOE));
 			inv.setItem(18, Main.createItem("§aNext Page", Material.ARROW));
 		}
@@ -44,6 +46,11 @@ public class Notifications implements InventoryHolder {
 	}
 	
 	public void goToPage(int page) { // interprets the listing data, and adds each listing to the interface
+		
+		if (items.size() <= 21 * (currentPage - 1))
+		{
+			currentPage--; // No blank pages pls
+		}
 		
 		for (int index = 0; index < 20; index++) {
 			ItemStack itemStack = null;
@@ -87,16 +94,10 @@ public class Notifications implements InventoryHolder {
 		
 		if (advance) {
 			currentPage++;
-			if ((double) currentPage > pages + 1.0) {
-				currentPage = (int) Math.ceil(pages);
-			}
 			goToPage(currentPage);
 			
 		} else {
 			currentPage--;
-			if ((double) currentPage < 1) {
-				currentPage = 1;
-			}
 			goToPage(currentPage);
 		}
 	}
