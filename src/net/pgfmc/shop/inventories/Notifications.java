@@ -28,24 +28,19 @@ public class Notifications implements InventoryHolder {
 		items = Database.getPlayerMoney(player);
 		this.player = player;
 		instances.add(this);
-		pages = ((int) Math.ceil((items.size() + 1) / 21));
+		pages = ((int) Math.ceil(items.size() / 21.0));
 		if (pages < 1) {
 			pages = 1;
 		}
 		
 		inv.setItem(0, Main.createItem("§eBack", Material.FEATHER));
 		
-		if (pages > 1) { // if the size of the list is 21 or greater, show buttons for changing pages
-			inv.setItem(9, Main.createItem("§aPrevious Page", Material.IRON_HOE));
-			inv.setItem(18, Main.createItem("§aNext Page", Material.ARROW));
-		}
-		
 		goToPage(currentPage);
 	}
 	
 	public void goToPage(int page) { // interprets the listing data, and adds each listing to the interface
 		
-		for (int index = 0; index < 20; index++) {
+		for (int index = 0; index <= 20; index++) {
 			ItemStack itemStack = null;
 			try {
 					itemStack = items.get(index);
@@ -80,6 +75,18 @@ public class Notifications implements InventoryHolder {
 				case 20: inv.setItem(26, itemStack);
 				}
 			}
+		}
+		
+		if (currentPage != pages) {
+			inv.setItem(18, Main.createItem("§aNext Page", Material.ARROW));
+		} else {
+			inv.clear(18);
+		}
+		
+		if (currentPage != 1) {
+			inv.setItem(9, Main.createItem("§aPrevious Page", Material.IRON_HOE));
+		} else {
+			inv.clear(9);
 		}
 	}
 	

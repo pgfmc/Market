@@ -65,10 +65,13 @@ public class InventoryEvents implements Listener {
 			
 			int slot = e.getSlot();
 			
-			if (slot >= 0 && slot < 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0
+			if (slot >= 0 && slot <= 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0
 				// code here for buying an item / offering to buy an item
-				Listing listing = Listing.getListings().get(slot);
+				
+				Listing listing = Listing.getListings().get(slot + ((inventory.getPage() - 1) * 36));
+				
 				player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
+				
 				if (listing.getPlayer() == player) {
 					openShopInventory(new ViewOwnListing(listing), player);
 				} else {

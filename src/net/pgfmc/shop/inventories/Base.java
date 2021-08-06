@@ -25,7 +25,7 @@ public class Base implements InventoryHolder {
 		inv = Bukkit.createInventory(this, 54, "Shop");
 		
 		listings = Listing.getListings(); // Gets the Listing from the database.yml file
-		pages = ((int) Math.floor((listings.size() + 1) / 36));
+		pages = (int) (Math.ceil(listings.size() / 36.0));
 		Listing.loadListings();
 		
 		ItemStack listingItem = null;
@@ -35,7 +35,9 @@ public class Base implements InventoryHolder {
 			
 			for (Listing listing : listings) // Assigns each slot a listing
 			{
-				if (listings.size() < 36)
+				goToPage(1);
+				
+				if (listings.size() <= 36)
 				{
 					listingItem = listing.getItem() ; // ItemStack of item
 					
@@ -60,10 +62,7 @@ public class Base implements InventoryHolder {
 		// feather = "back"
 		// slimeball = "confirm"
 		
-		if (pages > 1) { // ------------ if the amount of listings is more than 36, then it allows for more pages
-			inv.setItem(48, Main.createItem("§aPrevious Page", Material.IRON_HOE));
-			inv.setItem(50, Main.createItem("§aNext Page", Material.ARROW));
-		}
+		
 		
 		inv.setItem(49, Main.createItem("§2Refresh", Material.SUNFLOWER));
 		inv.setItem(52, Main.createItem("§eNew Listing", Material.OAK_SIGN));
@@ -72,29 +71,43 @@ public class Base implements InventoryHolder {
 	
 	public void goToPage(int page) { // interprets the listing data, and adds each listing to the interface
 		
-		for (Listing listing : listings) {
+		int loopHelp = 0;
+		
+		while (loopHelp < 36) {
 			
-			ItemStack itemStack = listing.getItem();
-			ItemMeta itemMeta = itemStack.getItemMeta();
-			int index = listings.indexOf(listing);
-			
-			List<String> lore = new ArrayList<String>();
-			
-			lore.add("Price: " + Main.makePlural(itemStack));
-			
-			itemStack.setItemMeta(itemMeta);
-			
-			if (index >= (page - 1) * 36 && index <= (page - 1) * 36 + 8) { // sets Listings in the interface
-				inv.setItem(index - (currentPage - 1) * 36, itemStack);
+			try {
+				ItemStack itemStack = listings.get(loopHelp + ((page - 1) * 36)).getItem();
+				ItemMeta itemMeta = itemStack.getItemMeta();
+				List<String> lore = new ArrayList<String>();
+				
+				lore.add("Price: " + Main.makePlural(itemStack));
+				itemStack.setItemMeta(itemMeta);
+				inv.setItem(loopHelp, itemStack);
+			} catch(IndexOutOfBoundsException e) {
+				inv.clear(loopHelp);
 			}
+			loopHelp++;
+		}
+		
+		if (currentPage != pages) {
+			inv.setItem(50, Main.createItem("§aNext Page", Material.ARROW));
+		} else {
+			inv.clear(50);
+		}
+		
+		if (currentPage != 1) {
+			inv.setItem(48, Main.createItem("§aPrevious Page", Material.IRON_HOE));
+		} else {
+			inv.clear(48);
 		}
 	}
 	
 	public void flipPage(boolean advance) { // flips the page forwards/backwards (true/false)
-		if (advance) {
+		if (advance && currentPage != pages) {
 			currentPage++;
 			goToPage(currentPage);
-		} else {
+			
+		} else if (!advance && currentPage != 1) {
 			currentPage--;
 			goToPage(currentPage);
 		}
@@ -120,5 +133,9 @@ public class Base implements InventoryHolder {
 	@Override
 	public Inventory getInventory() {
 		return inv;
+	}
+	
+	public int getPage() {
+		return currentPage;
 	}
 }
