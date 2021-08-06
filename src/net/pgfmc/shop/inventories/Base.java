@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -13,32 +12,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.pgfmc.shop.Listing;
 import net.pgfmc.shop.Main;
-import net.pgfmc.shop.commands.Shop;
 
 public class Base implements InventoryHolder {
 	
 	private Inventory inv;
 	private List<Listing> listings = new ArrayList<Listing>();
-	private Player p;
-	// private int pages;
+	private int pages;
 	private transient int currentPage = 1;
 	
-	public Base(Player p) // constructor (creates main menu for shops) 
+	public Base() // constructor (creates main menu for shops) 
 	{
 		inv = Bukkit.createInventory(this, 54, "Shop");
-		this.p = p;
-		
-		
-		
-		render();
-	}
-	
-	public void render()
-	{
-		
 		
 		listings = Listing.getListings(); // Gets the Listing from the database.yml file
-		// pages = ((int) Math.floor((listings.size() + 1) / 36)); // commented out because we don't need
+		pages = ((int) Math.floor((listings.size() + 1) / 36));
 		Listing.loadListings();
 		
 		ItemStack listingItem = null;
@@ -46,14 +33,9 @@ public class Base implements InventoryHolder {
 		if (listings != null) {
 			int index = 0;
 			
-			if (listings.size() <= 36 * (currentPage - 1))
-			{
-				currentPage--; // No blank pages pls
-			}
-			
 			for (Listing listing : listings) // Assigns each slot a listing
 			{
-				if (index + 1 > 36 * (currentPage - 1) && index + 1 <= 36 * currentPage)
+				if (listings.size() < 36)
 				{
 					listingItem = listing.getItem() ; // ItemStack of item
 					
@@ -66,11 +48,8 @@ public class Base implements InventoryHolder {
 					listingItem.setItemMeta(itemMeta);
 					
 					inv.setItem(index, listingItem);
+					index++;
 				}
-				
-				index++;
-				
-				
 			}
 		}
 		
@@ -81,7 +60,7 @@ public class Base implements InventoryHolder {
 		// feather = "back"
 		// slimeball = "confirm"
 		
-		if (listings.size() > 36) { // ------------ if the amount of listings is more than 36, then it allows for more pages
+		if (pages > 1) { // ------------ if the amount of listings is more than 36, then it allows for more pages
 			inv.setItem(48, Main.createItem("§aPrevious Page", Material.IRON_HOE));
 			inv.setItem(50, Main.createItem("§aNext Page", Material.ARROW));
 		}
@@ -89,10 +68,7 @@ public class Base implements InventoryHolder {
 		inv.setItem(49, Main.createItem("§2Refresh", Material.SUNFLOWER));
 		inv.setItem(52, Main.createItem("§eNew Listing", Material.OAK_SIGN));
 		inv.setItem(53, Main.createItem("§eMy Listings", Material.GOLD_NUGGET));
-		
 	}
-	
-	/* Dopn't need -bk
 	
 	public void goToPage(int page) { // interprets the listing data, and adds each listing to the interface
 		
@@ -108,30 +84,19 @@ public class Base implements InventoryHolder {
 			
 			itemStack.setItemMeta(itemMeta);
 			
-			if (index >= 36 * currentPage - 36 && index <= 36 * currentPage)
-			{
-				
-			}
-			
-			
-			
 			if (index >= (page - 1) * 36 && index <= (page - 1) * 36 + 8) { // sets Listings in the interface
 				inv.setItem(index - (currentPage - 1) * 36, itemStack);
 			}
-			
 		}
 	}
-	
-	*/
-	
 	
 	public void flipPage(boolean advance) { // flips the page forwards/backwards (true/false)
 		if (advance) {
 			currentPage++;
+			goToPage(currentPage);
 		} else {
-			if (currentPage == 1) { return; } // No negatives please -bk
-			
 			currentPage--;
+			goToPage(currentPage);
 		}
 	}
 	
@@ -154,36 +119,6 @@ public class Base implements InventoryHolder {
 	
 	@Override
 	public Inventory getInventory() {
-		render();
 		return inv;
-	}
-	
-	public boolean matches(Player p)
-	{
-		if (this.p.equals(p))
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public static Base findMatch(Player p)
-	{
-		for (Base shopper : Shop.SHOPPERS)
-		{
-			if (shopper.matches(p))
-			{
-				return shopper;
-			}
-		}
-		
-		return null;
-	}
-	
-	public int normalize(int slot)
-	{
-		
-		return (slot + 36 * (currentPage - 1)); // returns correct index for "listings"
 	}
 }

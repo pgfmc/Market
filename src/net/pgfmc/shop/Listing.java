@@ -63,7 +63,7 @@ public class Listing {
 		for (Listing listing : instances) {
 			list.add(listing);
 		}
-		return list; // Why don't you just return "instances"? -bk
+		return list;
 	}
 	
 	// ------------------------------------------------------------------------ Get Listing Type

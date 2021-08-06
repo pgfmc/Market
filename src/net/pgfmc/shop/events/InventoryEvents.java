@@ -65,59 +65,46 @@ public class InventoryEvents implements Listener {
 			
 			int slot = e.getSlot();
 			
-			if (slot >= 0 && slot <= 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0 //  stfup -, bk
-				if (inventory.normalize(slot) + 1 <= Listing.getListings().size()) // In bounds check
-				{
-					// code here for buying an item / offering to buy an item
-					Listing listing = Listing.getListings().get(inventory.normalize(slot));
+			if (slot >= 0 && slot < 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0
+				// code here for buying an item / offering to buy an item
+				Listing listing = Listing.getListings().get(slot);
+				player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
+				if (listing.getPlayer() == player) {
+					openShopInventory(new ViewOwnListing(listing), player);
+				} else {
+					openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), player); // opens a buy interface to buy an item
 					player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-					if (listing.getPlayer() == player) {
-						openShopInventory(new ViewOwnListing(listing), player);
-					} else {
-						openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), player); // opens a buy interface to buy an item
-						player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-					}
-					return;
 				}
-				
+				return;
 			}
 			
 			switch(slot) { // switch statement
 				
-			case 46:
-				openShopInventory(new Notifications(player), player);
+			case 46: 	openShopInventory(new Notifications(player), player);
 				player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
 				return; // Emerald
 			
-			case 48:
-				inventory.flipPage(false);
-				inventory.render();
-				player.playSound(location, Sound.ITEM_BOOK_PAGE_TURN, 1, 1);
-				return; // Iron hoe (????-bk)
+			case 48: 	inventory.flipPage(false);
+						player.playSound(location, Sound.ITEM_BOOK_PAGE_TURN, 1, 1);
+						return; // Iron hoe
 			
-			case 49:
-				inventory.render();
-				player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
-				return;
+			case 49: 	openShopInventory(new Base(), player); // Open a new instance of the inventory
+						player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
+						return;
 			
-			case 50:
-				inventory.flipPage(true);
-				inventory.render();
-				player.playSound(location, Sound.ITEM_BOOK_PAGE_TURN, 1, 1);
-				return;
+			case 50:	inventory.flipPage(true);
+						player.playSound(location, Sound.ITEM_BOOK_PAGE_TURN, 1, 1);
+						return;
 			
-			case 52:
-				openShopInventory(new NewListing(), player);// Opens NewListing inventory (Cast to Player might be unnecessary but I don't know)
-				player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
-				return;
+			case 52:	openShopInventory(new NewListing(), player);// Opens NewListing inventory (Cast to Player might be unnecessary but I don't know)
+						player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
+						return;
 			
-			case 53:
-				openShopInventory(new MyListings(player), player); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
-				player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
-				return;
+			case 53:	openShopInventory(new MyListings(player), player); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
+						player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
+						return;
 			
-			default:
-				return;
+			default:	return;
 			}
 			
 		} else if (inv!= null && (inv.getHolder() instanceof NewListing)) { // If the inventory isn't of NewListing.java then kick us out
@@ -133,7 +120,7 @@ public class InventoryEvents implements Listener {
 			
 			switch(slot) { // switch statement
 			
-			case 0:		openShopInventory(Base.findMatch(player).getInventory().getHolder(), player); player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
+			case 0:		openShopInventory(new Base(), player); player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
 						return;
 			case 4: 	e.setResult(Result.ALLOW); player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
 						return;
@@ -161,7 +148,7 @@ public class InventoryEvents implements Listener {
 						Listing.saveListings(); // saves listing
 						player.playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 						player.closeInventory(); // Close their inventory
-						openShopInventory(Base.findMatch(player).getInventory().getHolder(), player);
+						openShopInventory(new Base(), player);
 						return;
 						
 			default: 	return;
@@ -192,13 +179,12 @@ public class InventoryEvents implements Listener {
 			
 			case 0: 	// Close their inventory
 			
-				openShopInventory(Base.findMatch(player).getInventory().getHolder(), player); player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
+						openShopInventory(new Base(), player); player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1); // Opens MyListings inventory (Cast to Player might be unnecessary but I don't know)
 						return;
 						
 			case 9:		if (inv.getItem(e.getSlot()) != null) { // goes to previous page
 							player.playSound(location, Sound.ITEM_BOOK_PAGE_TURN, 1, 1);
 							inventory.flipPage(false);
-							
 						}
 						return;
 			case 18: 	if (inv.getItem(e.getSlot()) != null) { // goes to next page
@@ -206,8 +192,7 @@ public class InventoryEvents implements Listener {
 							inventory.flipPage(true);
 						}
 						return;
-			default:
-				return;
+			default: 	return;
 			}
 			
 		} else if (inv != null && (inv.getHolder() instanceof PurchaseListing)) { // If the inventory isn't of MyListings.java then kick us out
@@ -218,7 +203,7 @@ public class InventoryEvents implements Listener {
 			
 			if (slot == 0) {
 				e.setCancelled(true);
-				openShopInventory(Base.findMatch(player).getInventory().getHolder(), player);
+				openShopInventory(new Base(), player);
 				player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
 				return;
 				
@@ -248,7 +233,7 @@ public class InventoryEvents implements Listener {
 					
 				if (slot == 0) { // ------------------------------------------------- if the feather is clicked to go back
 					e.setCancelled(true);
-					openShopInventory(Base.findMatch(player).getInventory().getHolder(), player);
+					openShopInventory(new Base(), player);
 					return;
 				} else if (slot == 12 && (e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE) && !inventory.isTaken) {
 					
@@ -272,7 +257,7 @@ public class InventoryEvents implements Listener {
 				
 			case 0: 	// Close their inventory
 						player.playSound(location, Sound.UI_BUTTON_CLICK, 1, 1);
-						openShopInventory(Base.findMatch(player).getInventory().getHolder(), player);
+						openShopInventory(new Base(), player);
 						return;
 			case 9:		if (inv.getItem(e.getSlot()) != null) { // goes to previous page
 							player.playSound(location, Sound.ITEM_BOOK_PAGE_TURN, 1, 1);
