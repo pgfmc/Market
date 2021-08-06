@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -53,32 +52,6 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
 		
 		Listing.loadListings();
-		
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { // auto shut down server
-            @Override
-            public void run() {
-            	Bukkit.broadcastMessage("§6Server Restarts in 10 Minutes!");
-            	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                    	Bukkit.broadcastMessage("§6Server Restarts in 1 Minute!");
-                    	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                            	Bukkit.broadcastMessage("§6Restarting Server...");
-                            	Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                    @Override
-                                    public void run() {
-                                    	Bukkit.getServer().shutdown();
-                                    }
-                                }, 20); // 1 Second
-                            	Bukkit.getServer().shutdown();
-                            }
-                        }, 1200); // 1 Minute
-                    }
-                }, 10800); // 9 Minutes
-            }
-        }, 1716000); // 24 hours - 10 Minutes
 	}
 	
 	// functions used all around the place in this pluign :)
