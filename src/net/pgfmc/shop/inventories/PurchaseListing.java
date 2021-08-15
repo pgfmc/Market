@@ -81,7 +81,7 @@ public class PurchaseListing implements InventoryHolder {
 		Database.addMoneytoPlayer(lst.getPlayer(), lst.getTrade());
 		lst.deleteListing();
 		if (lst.getPlayer() instanceof Player) {
-			((Player) lst.getPlayer()).sendMessage("§n§6Someone has bought from you on the shop!");
+			((Player) lst.getPlayer()).sendMessage("§n§6" + player.getName() + "§n§6 has bought from you on the shop!");
 			((Player) lst.getPlayer()).playSound(((Player) lst.getPlayer()).getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 		}
 		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);

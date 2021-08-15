@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -218,14 +219,12 @@ public class InventoryEvents implements Listener {
 					|| e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE || e.getAction() == InventoryAction.SWAP_WITH_CURSOR)) {
 				
 				
+				if (inventory.canBuy()) {
+					inventory.setInventoryState(Material.RED_CONCRETE);
+				} else {
+					inventory.setInventoryState(Material.GREEN_CONCRETE);
+				}
 				
-				
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-					@Override
-					public void run() {
-						inventory.canBuy();
-					}
-				}, 2);
 				return;
 			} else {
 				e.setCancelled(true);
