@@ -23,7 +23,17 @@ public class Main extends JavaPlugin {
 		
 		plugin = this;
 		
-		File file = new File(getDataFolder() + File.separator + "database.yml"); // Creates a File object
+		
+		
+		// ---------------------------------------------------- File creation thingy ( for storing data )
+		
+		File file = new File(getDataFolder().toString()); // Creates a File object
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		file = new File(getDataFolder() + File.separator); // Creates a File object
 		
 		if (!file.exists())
 		{
@@ -46,6 +56,8 @@ public class Main extends JavaPlugin {
 				e.printStackTrace();
 			}
 		}
+		
+		// ------------------------------------------------------ Commands And Events
 		
 		this.getCommand("shop").setExecutor(new Shop());
 		getServer().getPluginManager().registerEvents(new InventoryEvents(), this);

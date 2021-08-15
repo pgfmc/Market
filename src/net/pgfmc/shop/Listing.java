@@ -13,13 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Listing {
 	
 	private transient static ArrayList<Listing> instances = new ArrayList<Listing>();
-
-	public enum listingType {
-		LISTING,
-		TRADEOFFER
-	}
 	
-	listingType type;
 	ItemStack itemBeingSold;
 	ItemStack tradeItem;
 	UUID playerUuid;
@@ -27,8 +21,7 @@ public class Listing {
 	
 	// ------------------------------------------------------------------------ Constructors
 	
-	public Listing(OfflinePlayer seller, ItemStack itemBeingSold, ItemStack tradeItem, listingType type) {
-		this.type = type;
+	public Listing(OfflinePlayer seller, ItemStack itemBeingSold, ItemStack tradeItem) {
 		this.itemBeingSold = itemBeingSold;
 		
 		this.playerUuid = seller.getUniqueId();
@@ -64,12 +57,6 @@ public class Listing {
 			list.add(listing);
 		}
 		return list;
-	}
-	
-	// ------------------------------------------------------------------------ Get Listing Type
-	
-	public listingType getType() {
-		return type;
 	}
 	
 	// ------------------------------------------------------------------------ Get itemBeingSold / icon

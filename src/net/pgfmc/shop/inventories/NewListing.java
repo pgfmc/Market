@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.pgfmc.shop.Listing;
-import net.pgfmc.shop.Listing.listingType;
 import net.pgfmc.shop.Main;
 
 // manages the inventory for creating a new listing
@@ -22,7 +21,6 @@ public class NewListing implements InventoryHolder {
 	
 	private Inventory inv;
 	private ItemStack price = new ItemStack(Material.DIAMOND, 1);
-	private boolean isTrade = false;
 	private boolean closing = false;
 	
 	public NewListing()
@@ -70,14 +68,6 @@ public class NewListing implements InventoryHolder {
 		return;
 	}
 	
-	public boolean getIsTrade() {
-		return isTrade;
-	}
-	
-	public void setTrade(boolean setter) {
-		isTrade = setter;
-	}
-	
 	public void setClosing(boolean setter) {
 		closing = setter;
 	}
@@ -87,11 +77,7 @@ public class NewListing implements InventoryHolder {
 	}
 	
 	public void finalizeListing(Player player) {
-		listingType type = listingType.LISTING;
-		if (isTrade) {
-			type = listingType.TRADEOFFER;
-		}
-		new Listing((OfflinePlayer) player, inv.getItem(4), price, type);
+		new Listing((OfflinePlayer) player, inv.getItem(4), price);
 	}
 	
 	public static ItemStack switchLore(ItemStack item, String lore) { // changes the lore of an item using a string as input

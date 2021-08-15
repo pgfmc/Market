@@ -3,6 +3,7 @@ package net.pgfmc.shop.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -55,7 +56,7 @@ public class PlayerEvents implements Listener {
 	@EventHandler
 	public void clickAirBros(PlayerInteractEvent e) { // ----------------- if the player opens the SHOP book, then it pulls up the SHOP inventory/interface
 		
-		if (e.hasItem() && e.getMaterial() == Material.WRITTEN_BOOK && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+		if (e.hasItem() && e.getMaterial() == Material.WRITTEN_BOOK && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
 			
 			ItemMeta itemMeta = e.getItem().getItemMeta();
 					

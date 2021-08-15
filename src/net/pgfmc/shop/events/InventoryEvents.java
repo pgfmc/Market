@@ -68,16 +68,16 @@ public class InventoryEvents implements Listener {
 			if (slot >= 0 && slot <= 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0
 				// code here for buying an item / offering to buy an item
 				
-				Listing listing = Listing.getListings().get(slot + ((inventory.getPage() - 1) * 36));
+				//Listing listing = Listing.getListings().get(slot + ((inventory.getPage() - 1) * 36));
 				
 				player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
 				
-				if (listing.getPlayer() == player) {
+				/*if (listing.getPlayer() == player) {
 					openShopInventory(new ViewOwnListing(listing), player);
-				} else {
+				} else {*/
 					openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), player); // opens a buy interface to buy an item
 					player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-				}
+				//}
 				return;
 			}
 			
@@ -214,7 +214,12 @@ public class InventoryEvents implements Listener {
 				inventory.confirmBuy(player);
 				return;
 				
-			} else if (slot == 14 && !inventory.isBought && (e.getAction() == InventoryAction.PLACE_ALL || e.getAction() == InventoryAction.PLACE_SOME || e.getAction() == InventoryAction.PLACE_ONE || e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE || e.getAction() == InventoryAction.SWAP_WITH_CURSOR)) {
+			} else if (slot == 14 && !inventory.isBought && (e.getAction() == InventoryAction.PLACE_ALL || e.getAction() == InventoryAction.PLACE_SOME || e.getAction() == InventoryAction.PLACE_ONE 
+					|| e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE || e.getAction() == InventoryAction.SWAP_WITH_CURSOR)) {
+				
+				
+				
+				
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 					@Override
 					public void run() {
@@ -286,9 +291,10 @@ public class InventoryEvents implements Listener {
 	public void inventoryCloseConfirmListing(InventoryCloseEvent e) { // gives the item in the inventory that the player put in it if the inventory closes somehow
 
 		Inventory inv = e.getInventory();
-		if (inv != null && inv.getHolder() instanceof PurchaseListing && ((PurchaseListing) inv.getHolder()).getClosing() == false) {
+		if (inv != null && inv.getHolder() instanceof PurchaseListing && ((PurchaseListing) inv.getHolder()).getClosing() == false && inv.getItem(14) != null) {
 
 			e.getPlayer().getInventory().addItem(inv.getItem(14));
+			
 		} else if (inv != null && inv.getHolder() instanceof NewListing && ((NewListing) inv.getHolder()).getClosing() == false) {
 
 			e.getPlayer().getInventory().addItem(inv.getItem(4));
