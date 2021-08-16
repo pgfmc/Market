@@ -3,6 +3,7 @@ package net.pgfmc.shop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -102,7 +103,7 @@ public class Database {
 		
 		List<ItemStack> items = getPlayerMoney(player);
 		if (items == null) {
-			items = new ArrayList<ItemStack>();
+			items = new LinkedList<ItemStack>();
 		}
 		items.add(item);
 		setPlayerMoney(player, items);

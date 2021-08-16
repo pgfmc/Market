@@ -205,6 +205,8 @@ public class InventoryEvents implements Listener {
 		
 			int slot = e.getSlot();
 			
+			
+			
 			if (slot == 0) {
 				e.setCancelled(true);
 				openShopInventory(new Base(), player);
@@ -218,11 +220,10 @@ public class InventoryEvents implements Listener {
 			} else if (slot == 14 && !inventory.isBought && (e.getAction() == InventoryAction.PLACE_ALL || e.getAction() == InventoryAction.PLACE_SOME || e.getAction() == InventoryAction.PLACE_ONE 
 					|| e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE || e.getAction() == InventoryAction.SWAP_WITH_CURSOR)) {
 				
-				
-				if (inventory.canBuy()) {
-					inventory.setInventoryState(Material.RED_CONCRETE);
-				} else {
+				if (inventory.canBuy(e.getCursor())) {
 					inventory.setInventoryState(Material.GREEN_CONCRETE);
+				} else {
+					inventory.setInventoryState(Material.RED_CONCRETE);
 				}
 				
 				return;
@@ -297,14 +298,17 @@ public class InventoryEvents implements Listener {
 		} else if (inv != null && inv.getHolder() instanceof NewListing && ((NewListing) inv.getHolder()).getClosing() == false) {
 
 			e.getPlayer().getInventory().addItem(inv.getItem(4));
+		} else if (inv != null && inv.getHolder() instanceof Notifications) {
+			((Notifications) inv.getHolder()).inventoryClose();
 		}
 	}
 	
 	@EventHandler
 	public void inventoryPreventItemDragging(InventoryDragEvent e) { // prevents item dragging in shop inventories
-
+		
 		InventoryHolder inv = e.getView().getTopInventory().getHolder();
-		if (inv instanceof Base || inv instanceof PurchaseListing || inv instanceof MyListings || inv instanceof NewListing) {
+		if (inv instanceof Base || inv instanceof PurchaseListing || inv instanceof MyListings || inv instanceof NewListing || inv instanceof Notifications) {
+			
 			e.setResult(Result.DENY);
 		}
 	}

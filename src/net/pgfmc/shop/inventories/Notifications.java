@@ -1,6 +1,7 @@
 package net.pgfmc.shop.inventories;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ public class Notifications implements InventoryHolder {
 	
 	Inventory inv;
 	Player player;
-	List<ItemStack> items = new ArrayList<ItemStack>();
+	List<ItemStack> items = new LinkedList<ItemStack>();
 	List<Notifications> instances = new ArrayList<Notifications>();
 	int currentPage = 1;
 	int pages;
@@ -115,15 +116,29 @@ public class Notifications implements InventoryHolder {
 	public void itemTaken(int slot) {
 		
 		if (slot >= 2 && slot <= 8) {
-			items.remove(slot - 2 + ((currentPage - 1) * 21));
+			items.set(slot - 2 + ((currentPage - 1) * 21), null);
 			
 		} else if (slot >= 11 && slot <= 17) {
-			items.remove(slot - 4 + ((currentPage - 1) * 21));
+			items.set(slot - 4 + ((currentPage - 1) * 21), null);
 			
 		} else if (slot >= 20 && slot <= 26) {
-			items.remove(slot - 6 + ((currentPage - 1) * 21));
+			items.set(slot - 6 + ((currentPage - 1) * 21), null);
 		}
-		Database.setPlayerMoney(player, items);
+	}
+	
+	public void inventoryClose() {
+		
+		List<ItemStack> lizst = new ArrayList<ItemStack>();
+		
+		if (items != null) {
+			
+			for (ItemStack item : items) {
+				if (item != null) {
+					lizst.add(item);
+				}
+			}
+		}
+		Database.setPlayerMoney(player, lizst);
 	}
 
 	@Override

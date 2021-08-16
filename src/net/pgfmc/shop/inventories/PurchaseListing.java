@@ -65,16 +65,20 @@ public class PurchaseListing implements InventoryHolder {
 	public void confirmBuy(Player player) { // clears the inventory, and makes it to where all actions in the inventory are cancelled.
 		
 		ItemStack item = inv.getItem(14);
-		Integer lstItem = lst.getItem().getAmount();
+		int lstItem = lst.getTrade().getAmount();
 		
 		if (item.getAmount() == lstItem) {
+			
 			inv.setItem(14, new ItemStack(Material.AIR));
+			
 		} else if (item.getAmount() > lstItem) {
+			
 			item.setAmount(item.getAmount() - lstItem);
 			player.getInventory().addItem(item);
 			inv.setItem(14, new ItemStack(Material.AIR));
+			
 		} else {
-			System.out.println("ERROR: PurchaseListing.confirmBuy was run, while the listing wasn't able to buy from.");
+			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 1, 1);
 			return;
 		}
 		
@@ -127,14 +131,16 @@ public class PurchaseListing implements InventoryHolder {
 	}
 	
 	public boolean canBuy() { // returns if the listing can be bought
-
-		if (inv.getItem(14) != null && inv.getItem(14).getType() == lst.getTrade().getType() && inv.getItem(14).getAmount() >= lst.getTrade().getAmount()) {
-			return true;
-		}
-		return false;
+		System.out.println(inv.getItem(14) != null && inv.getItem(14).getType().equals(lst.getTrade().getType()) && inv.getItem(14).getAmount() >= lst.getTrade().getAmount());
+		return (inv.getItem(14) != null && inv.getItem(14).getType().equals(lst.getTrade().getType()) && inv.getItem(14).getAmount() >= lst.getTrade().getAmount());
+		
 	}
 	
-	
+	public boolean canBuy(ItemStack item) { // returns if the listing can be bought
+		System.out.println(item != null && item.getType().equals(lst.getTrade().getType()) && item.getAmount() >= lst.getTrade().getAmount());
+		return (item != null && item.getType().equals(lst.getTrade().getType()) && item.getAmount() >= lst.getTrade().getAmount());
+		
+	}
 	
 	public void setClosing(boolean closing) {
 		this.closing = closing;
