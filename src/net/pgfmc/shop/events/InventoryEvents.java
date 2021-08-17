@@ -190,10 +190,6 @@ public class InventoryEvents implements Listener {
 				slot = (slot - 2) + ((page - 1) * 21);
 				lambdabois.run(slot);
 				
-				
-				//player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-				//openShopInventory(new ViewOwnListing(listings.get(slot)), player);
-				
 			} else if (slot >= 11 && slot <= 17) {
 				slot = (slot - 4) + ((page - 1) * 21);
 				lambdabois.run(slot);
@@ -203,9 +199,6 @@ public class InventoryEvents implements Listener {
 				lambdabois.run(slot);
 				
 			}
-			
-			
-			
 			
 			switch(slot) {
 			
