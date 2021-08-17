@@ -30,6 +30,11 @@ import net.pgfmc.shop.inventories.ViewOwnListing;
 public class InventoryEvents implements Listener {
 	
 	
+	interface Lambda {
+		void run(int arg);
+	}
+	
+	
 	private void openShopInventory(InventoryHolder holder, Player player) {
 		
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
@@ -69,17 +74,19 @@ public class InventoryEvents implements Listener {
 			if (slot >= 0 && slot <= 35) { // -------------------- its 35, not 36 because 4 x 9 - 1 = 35, and we -1 because lists start at 0
 				// code here for buying an item / offering to buy an item
 				
-				//Listing listing = Listing.getListings().get(slot + ((inventory.getPage() - 1) * 36));
-				
-				player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-				
-				/*if (listing.getPlayer() == player) {
-					openShopInventory(new ViewOwnListing(listing), player);
-				} else {*/
-					openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), player); // opens a buy interface to buy an item
+				if (Listing.getListings().size() - 1 >= slot + ((inventory.getPage() - 1) * 36)) {
+					Listing listing = Listing.getListings().get(slot + ((inventory.getPage() - 1) * 36));
+					
 					player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-				//}
-				return;
+					
+					if (listing.getPlayer() == player) {
+						openShopInventory(new ViewOwnListing(listing), player);
+					} else {
+						openShopInventory(new PurchaseListing(Listing.getListings().get(slot)), player); // opens a buy interface to buy an item
+						player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
+					}
+					return;
+				}
 			}
 			
 			switch(slot) { // switch statement
@@ -168,16 +175,37 @@ public class InventoryEvents implements Listener {
 			int page = inventory.getPage();
 			List<Listing> listings = inventory.getListings();
 			
+			Lambda lambdabois = (int arg) -> {
+				if (listings.size() - 1 >= arg) {
+					player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
+					openShopInventory(new ViewOwnListing(listings.get(arg)), player);
+				}
+			};
+			
+			// -------------------------------- for when someone clicks on a listing in MyListings
+			
+			player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
+			
 			if (slot >= 2 && slot <= 8) { // ----------sets Listings in the interface
-				player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-				openShopInventory(new ViewOwnListing(listings.get((slot - 2) + (page - 1) * 21)), player);
+				slot = (slot - 2) + ((page - 1) * 21);
+				lambdabois.run(slot);
+				
+				
+				//player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
+				//openShopInventory(new ViewOwnListing(listings.get(slot)), player);
+				
 			} else if (slot >= 11 && slot <= 17) {
-				player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-				openShopInventory(new ViewOwnListing(listings.get((slot - 4) + (page - 1) * 21)), player);
+				slot = (slot - 4) + ((page - 1) * 21);
+				lambdabois.run(slot);
+				
 			} else if (slot >= 20 && slot <= 26) {
-				player.playSound(location, Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-				openShopInventory(new ViewOwnListing(listings.get((slot - 6) + (page - 1) * 21)), player);
+				slot = (slot - 6) + ((page - 1) * 21);
+				lambdabois.run(slot);
+				
 			}
+			
+			
+			
 			
 			switch(slot) {
 			
@@ -245,8 +273,6 @@ public class InventoryEvents implements Listener {
 					return;
 				} else if (slot == 12 && (e.getAction() == InventoryAction.PICKUP_ALL || e.getAction() == InventoryAction.PICKUP_HALF || e.getAction() == InventoryAction.PICKUP_ONE) && !inventory.isTaken) {
 					
-					
-					player.getInventory().addItem(inv.getItem(12));
 					inventory.confirmBuy(); // actual hell lol
 					return;
 				} else {
@@ -295,8 +321,8 @@ public class InventoryEvents implements Listener {
 
 			e.getPlayer().getInventory().addItem(inv.getItem(14));
 			
-		} else if (inv != null && inv.getHolder() instanceof NewListing && ((NewListing) inv.getHolder()).getClosing() == false) {
-
+		} else if (inv != null && inv.getHolder() instanceof NewListing && ((NewListing) inv.getHolder()).getClosing() == false && inv.getItem(4) != null) {
+			
 			e.getPlayer().getInventory().addItem(inv.getItem(4));
 		} else if (inv != null && inv.getHolder() instanceof Notifications) {
 			((Notifications) inv.getHolder()).inventoryClose();

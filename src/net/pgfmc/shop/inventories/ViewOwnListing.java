@@ -43,6 +43,11 @@ public class ViewOwnListing implements InventoryHolder {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() { // in-inventory animations
             @Override
             public void run() {
+            	
+            	if (inv.getItem(12) != null) {
+            		listing.getPlayer().getPlayer().getInventory().addItem(inv.getItem(12));
+            	}
+            	
             	ItemStack[] itemList = {ironBars, ironBars, ironBars, ironBars, ironBars, ironBars, ironBars, ironBars};
             	int index = 1;
         		for (ItemStack item : itemList) {

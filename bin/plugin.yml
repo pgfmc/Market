@@ -1,5 +1,5 @@
 name: Shop
-version: 2.5.1
+version: 2.5.2
 api-version: 1.17
 author: [bk, CrimsonDart]
 main: net.pgfmc.shop.Main
