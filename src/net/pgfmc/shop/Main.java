@@ -10,8 +10,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.pgfmc.shop.commands.Shop;
-import net.pgfmc.shop.events.InventoryEvents;
-import net.pgfmc.shop.events.PlayerEvents;
 
 public class Main extends JavaPlugin {
 	
@@ -22,8 +20,6 @@ public class Main extends JavaPlugin {
 	{
 		
 		plugin = this;
-		
-		
 		
 		// ---------------------------------------------------- File creation thingy ( for storing data )
 		
@@ -40,7 +36,6 @@ public class Main extends JavaPlugin {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -60,8 +55,6 @@ public class Main extends JavaPlugin {
 		// ------------------------------------------------------ Commands And Events
 		
 		this.getCommand("shop").setExecutor(new Shop());
-		getServer().getPluginManager().registerEvents(new InventoryEvents(), this);
-		getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
 		
 		Listing.loadListings();
 	}
@@ -92,7 +85,7 @@ public class Main extends JavaPlugin {
 		
 		String name = Main.getName(itemStack.getType()); // --------- plural stuff
 		if (itemStack.getAmount() == 1) {
-			return("§b" + String.valueOf(itemStack.getAmount()) + " " + name);
+			return("ï¿½b" + String.valueOf(itemStack.getAmount()) + " " + name);
 		} else {
 			
 			switch(itemStack.getType()) { // Switch for special case plurals.
@@ -210,19 +203,19 @@ public class Main extends JavaPlugin {
 					return(name);
 				}
 				if (name.endsWith("s") || name.endsWith("x") || name.endsWith("sh")) {
-					return("§b" + String.valueOf(itemStack.getAmount()) + " " + name + "es");
+					return("ï¿½b" + String.valueOf(itemStack.getAmount()) + " " + name + "es");
 				} else if (name.endsWith("y")){
-					return("§b" + String.valueOf(itemStack.getAmount()) + " " + name.substring(0, name.length() - 2) + "ies");
+					return("ï¿½b" + String.valueOf(itemStack.getAmount()) + " " + name.substring(0, name.length() - 2) + "ies");
 				} else if (name.startsWith("Arrow of")) {
-					return("§b" + String.valueOf(itemStack.getAmount()) + " Arrows of" + name.substring(8, name.length() - 1));
+					return("ï¿½b" + String.valueOf(itemStack.getAmount()) + " Arrows of" + name.substring(8, name.length() - 1));
 				} else if (name.startsWith("Potion of")) {
-					return("§b" + String.valueOf(itemStack.getAmount()) + " Potions of" + name.substring(9, name.length() - 1));
+					return("ï¿½b" + String.valueOf(itemStack.getAmount()) + " Potions of" + name.substring(9, name.length() - 1));
 				} else if (name.startsWith("Splash Potion of")) {
-					return("§b" + String.valueOf(itemStack.getAmount()) + " Splash Potions of" + name.substring(15, name.length() - 1));
+					return("ï¿½b" + String.valueOf(itemStack.getAmount()) + " Splash Potions of" + name.substring(15, name.length() - 1));
 				} else if (name.startsWith("Lingering Potion of")) {
-					return("§b" + String.valueOf(itemStack.getAmount()) + " Lingering Potions of" + name.substring(18, name.length() - 1));
+					return("ï¿½b" + String.valueOf(itemStack.getAmount()) + " Lingering Potions of" + name.substring(18, name.length() - 1));
 				} else {
-					return("§b" + String.valueOf(itemStack.getAmount()) + " " + name + "s");
+					return("ï¿½b" + String.valueOf(itemStack.getAmount()) + " " + name + "s");
 				}
 			}
 		}

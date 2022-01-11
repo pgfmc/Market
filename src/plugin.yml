@@ -1,11 +1,11 @@
 name: Shop
-version: 2.5.2
-api-version: 1.17
+version: 4.0.0
+api-version: 1.18
 author: [bk, CrimsonDart]
 main: net.pgfmc.shop.Main
 description: Implements a global market to buy and sell
 commands:
   shop:
     description: Global buy/sell shop
-    usage: /shop
-    aliases: [ah, sh]
+    usage: /<command>
+    aliases: [sh]

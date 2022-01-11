@@ -7,8 +7,13 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import net.pgfmc.core.inventoryAPI.extra.Button;
+import net.pgfmc.core.playerdataAPI.PlayerData;
+import net.pgfmc.shop.Inventories.ListingBuy;
 
 public class Listing {
 	
@@ -58,7 +63,39 @@ public class Listing {
 		}
 		return list;
 	}
-	
+
+	//public static List<Button> getButtons() {
+		
+		//return instances.stream().map()
+
+
+
+	//}
+
+	/**
+	 * Gets the button that can open the listing to its buy inventory.
+	 * @return
+	 */
+	public Button toButton(PlayerData pd) {
+
+		if (playerUuid.equals(pd.getUniqueId())) {
+			return new Button(itemBeingSold.getType(), (e, d) -> {
+
+
+
+				e.getWhoClicked().openInventory(new ListingBuy(this, PlayerData.getPlayerData((Player) e.getWhoClicked())).getInventory());
+			}, null, "§dCost: " + getPrice());
+
+		} else {
+			return new Button(itemBeingSold.getType(), (e, d) -> {
+
+
+
+				e.getWhoClicked().openInventory(new ListingBuy(this, PlayerData.getPlayerData((Player) e.getWhoClicked())).getInventory());
+			}, null, "§dCost: " + getPrice());
+		}
+	}
+
 	// ------------------------------------------------------------------------ Get itemBeingSold / icon
 	
 	public ItemStack getItem() {

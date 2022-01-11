@@ -6,8 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.pgfmc.shop.inventories.Base;
-
 public class Shop implements CommandExecutor {
 
 	@Override
@@ -15,14 +13,14 @@ public class Shop implements CommandExecutor {
 		
 		if (!(sender instanceof Player) || ((Player) sender).getGameMode() != GameMode.SURVIVAL)
 		{
-			sender.sendMessage("§cYou cannot execute this command."); // lol
+			sender.sendMessage("Â§cYou cannot execute this command."); // lol
 			return true;
 		}
 		
 		Player p = (Player) sender; // gets Base (all of the listings) and then opens the gui for them
 		
-		Base gui = new Base();
-		p.openInventory(gui.getInventory());
+		//Base gui = new Base();
+		//p.openInventory(gui.getInventory());
 		
 		return true;
 	}
