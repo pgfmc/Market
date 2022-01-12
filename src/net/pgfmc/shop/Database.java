@@ -24,8 +24,6 @@ includes serializer and deserializer for Listing()
 
 public class Database {
 	
-	
-	
 	public static void save(ArrayList<Listing> listings) { // saves all instances of Listing
 		
 		File file = new File(Main.plugin.getDataFolder() + File.separator + "database.yml"); // Creates a File object
