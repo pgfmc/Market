@@ -6,6 +6,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.pgfmc.core.playerdataAPI.PlayerData;
+import net.pgfmc.shop.Inventories.MainScreen;
+
+/**
+ * @author CrimsonDart
+ * @version 4.0.0
+ */
 public class Shop implements CommandExecutor {
 
 	@Override
@@ -16,11 +23,8 @@ public class Shop implements CommandExecutor {
 			sender.sendMessage("§cYou cannot execute this command."); // lol
 			return true;
 		}
-		
-		Player p = (Player) sender; // gets Base (all of the listings) and then opens the gui for them
-		
-		//Base gui = new Base();
-		//p.openInventory(gui.getInventory());
+
+		((Player) sender).openInventory(new MainScreen(PlayerData.getPlayerData((Player) sender)).getInventory()); // opens the inventory
 		
 		return true;
 	}

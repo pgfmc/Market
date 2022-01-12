@@ -21,7 +21,7 @@ public class ListingBuy extends BaseInventory {
         this.listing = listing;
 
         setButton(0, new Button(Material.FEATHER, (e, d) -> {
-            e.getWhoClicked().openInventory(new MainScreen().getInventory()); // opens back to Main screen
+            e.getWhoClicked().openInventory(new MainScreen(pd).getInventory()); // opens back to Main screen
         }, "§cBack"));
 
         removeItem();
@@ -75,8 +75,4 @@ public class ListingBuy extends BaseInventory {
     private void buyItem() {
         listing.deleteListing();
     }
-    
-
-
-    
 }

@@ -18,7 +18,6 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable()
 	{
-		
 		plugin = this;
 		
 		// ---------------------------------------------------- File creation thingy ( for storing data )

@@ -3,6 +3,7 @@ package net.pgfmc.shop;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -64,13 +65,11 @@ public class Listing {
 		return list;
 	}
 
-	//public static List<Button> getButtons() {
-		
-		//return instances.stream().map()
-
-
-
-	//}
+	public static List<Button> getButtons(PlayerData pd) {
+		return instances.stream().map(x -> {
+			return x.toButton(pd);
+		}).collect(Collectors.toList());
+	}
 
 	/**
 	 * Gets the button that can open the listing to its buy inventory.
@@ -80,16 +79,11 @@ public class Listing {
 
 		if (playerUuid.equals(pd.getUniqueId())) {
 			return new Button(itemBeingSold.getType(), (e, d) -> {
-
-
-
 				e.getWhoClicked().openInventory(new ListingBuy(this, PlayerData.getPlayerData((Player) e.getWhoClicked())).getInventory());
 			}, null, "§dCost: " + getPrice());
 
 		} else {
 			return new Button(itemBeingSold.getType(), (e, d) -> {
-
-
 
 				e.getWhoClicked().openInventory(new ListingBuy(this, PlayerData.getPlayerData((Player) e.getWhoClicked())).getInventory());
 			}, null, "§dCost: " + getPrice());
