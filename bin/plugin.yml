@@ -5,7 +5,7 @@ author: [bk, CrimsonDart]
 main: net.pgfmc.shop.Main
 description: Implements a global market to buy and sell
 commands:
-  shop:
+  market:
     description: Global buy/sell shop
     usage: /<command>
-    aliases: [sh]
+    aliases: [m]

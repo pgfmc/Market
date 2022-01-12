@@ -53,7 +53,7 @@ public class Main extends JavaPlugin {
 		
 		// ------------------------------------------------------ Commands And Events
 		
-		this.getCommand("shop").setExecutor(new Shop());
+		this.getCommand("market").setExecutor(new Shop());
 		
 		Listing.loadListings();
 	}

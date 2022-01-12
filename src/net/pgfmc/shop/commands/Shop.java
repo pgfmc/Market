@@ -20,10 +20,15 @@ public class Shop implements CommandExecutor {
 		
 		if (!(sender instanceof Player) || ((Player) sender).getGameMode() != GameMode.SURVIVAL)
 		{
-			sender.sendMessage("Â§cYou cannot execute this command."); // lol
+			sender.sendMessage("§cYou cannot execute this command."); // lol
 			return true;
 		}
-
+		
+		PlayerData pd = PlayerData.getPlayerData((Player) sender);
+		
+		if (pd == null) return true;
+		
+		
 		((Player) sender).openInventory(new MainScreen(PlayerData.getPlayerData((Player) sender)).getInventory()); // opens the inventory
 		
 		return true;
