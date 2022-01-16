@@ -4,8 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import net.pgfmc.core.inventoryAPI.BaseInventory;
-import net.pgfmc.core.inventoryAPI.extra.Butto;
-import net.pgfmc.core.inventoryAPI.extra.Button;
 import net.pgfmc.core.inventoryAPI.extra.SizeData;
 import net.pgfmc.core.playerdataAPI.PlayerData;
 import net.pgfmc.shop.Listing;
@@ -19,57 +17,63 @@ public class ListingBuy extends BaseInventory {
         super(SizeData.SMALL, "");
         this.player = pd;
         this.listing = listing;
-
-        setButton(0, new Button(Material.FEATHER, (e, d) -> {
-            e.getWhoClicked().openInventory(new MainScreen(pd).getInventory()); // opens back to Main screen
-        }, "Â§cBack"));
+        
+        
+        setAction(0, (p, e) -> {
+            p.openInventory(new MainScreen(pd).getInventory()); // opens back to Main screen
+        });
+        setItem(0, Material.FEATHER).n("§cBack");
 
         removeItem();
     }
 
     private void removeItem() {
-        setButton(2, new Button(Material.GRAY_CONCRETE, ""));
-        setButton(10, new Button(Material.GRAY_CONCRETE, ""));
-        setButton(12, new Button(Material.GRAY_CONCRETE, ""));
-        setButton(20, new Button(Material.GRAY_CONCRETE, ""));
-
-        setButton(11, new Button(Material.AIR, (e, i) -> {
+    	
+    	setItem(2, Material.GRAY_CONCRETE).n("");
+    	setItem(10, Material.GRAY_CONCRETE).n("");
+    	setItem(12, Material.GRAY_CONCRETE).n("");
+    	setItem(20, Material.GRAY_CONCRETE).n("");
+    	
+    	// slot in the center off the above slots :)
+    	setAction(11, (p, e) -> {
             enterItem(e.getCursor());
-        })); // slot in the center off the above slots :)
-
-        setButton(13, new Button(listing.getTrade(), Butto.defaultButto));
-
-        setButton(6, new Button(Material.RED_CONCRETE, ""));
-        setButton(14, new Button(Material.RED_CONCRETE, ""));
-        setButton(16, new Button(Material.RED_CONCRETE, ""));
-        setButton(24, new Button(Material.RED_CONCRETE, ""));
-
-        setButton(15, new Button(listing.getItem().getType(), Butto.defaultButto, null, 
-                                            "Â§dPlace " + listing.getPrice() + "\nÂ§dinto the slot to the left\nÂ§dto buy.")
-            );
+        });
+    	setItem(11, Material.AIR);
+    	
+    	setItem(13, listing.getTrade());
+    	
+    	setItem(6, Material.RED_CONCRETE).n("");
+    	setItem(14, Material.RED_CONCRETE).n("");
+    	setItem(16, Material.RED_CONCRETE).n("");
+    	setItem(24, Material.RED_CONCRETE).n("");
+    	
+    	setItem(15, listing.getItem().getType()).l("§dPlace " + listing.getPrice() + "\n§dinto the slot to the left\n§dto buy.");
     }
 
     private void enterItem(ItemStack item) {
-        
-        setButton(11, new Button(item, (e, i) -> {
+    	
+    	
+    	setAction(11, (p, e) -> {
             e.setCancelled(false);
             removeItem();
-        }));
+        });
+    	setItem(11, item);
+    	
+    	setItem(2, Material.YELLOW_CONCRETE).n("");
+    	setItem(10, Material.YELLOW_CONCRETE).n("");
+    	setItem(12, Material.YELLOW_CONCRETE).n("");
+    	setItem(20, Material.YELLOW_CONCRETE).n("");
 
-        setButton(2, new Button(Material.YELLOW_CONCRETE, ""));
-        setButton(10, new Button(Material.YELLOW_CONCRETE, ""));
-        setButton(12, new Button(Material.YELLOW_CONCRETE, ""));
-        setButton(20, new Button(Material.YELLOW_CONCRETE, ""));
-
-        setButton(6, new Button(Material.GREEN_CONCRETE, ""));
-        setButton(14, new Button(Material.GREEN_CONCRETE, ""));
-        setButton(16, new Button(Material.GREEN_CONCRETE, ""));
-        setButton(24, new Button(Material.GREEN_CONCRETE, ""));
-
-        setButton(15, new Button(listing.getItem(), (e, i) -> {
+    	setItem(6, Material.GREEN_CONCRETE).n("");
+    	setItem(14, Material.GREEN_CONCRETE).n("");
+    	setItem(16, Material.GREEN_CONCRETE).n("");
+    	setItem(24, Material.GREEN_CONCRETE).n("");
+    	
+    	setAction(15, (p, e) -> {
             e.setCancelled(false);
             buyItem();
-        }));
+        });
+    	setItem(15, listing.getItem());
     }
 
     private void buyItem() {

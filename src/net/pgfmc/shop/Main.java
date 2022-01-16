@@ -55,7 +55,7 @@ public class Main extends JavaPlugin {
 		
 		this.getCommand("market").setExecutor(new Shop());
 		
-		Listing.loadListings();
+		// XXX Listing.loadListings();
 	}
 	
 	// functions used all around the place in this pluign :)

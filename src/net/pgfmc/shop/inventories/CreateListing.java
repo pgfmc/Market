@@ -2,10 +2,9 @@ package net.pgfmc.shop.Inventories;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import net.pgfmc.core.inventoryAPI.BaseInventory;
-import net.pgfmc.core.inventoryAPI.extra.Button;
+import net.pgfmc.core.inventoryAPI.extra.Butto;
 import net.pgfmc.core.inventoryAPI.extra.SizeData;
 import net.pgfmc.core.playerdataAPI.PlayerData;
 
@@ -23,39 +22,29 @@ public class CreateListing extends BaseInventory {
 
     private void setPrice(ItemStack sell) {
 
-        buttons = new Button[buttons.length];
-        inv.clear();
-
-        setButton(0, new Button(Material.FEATHER, (e, i) -> {
-            e.getWhoClicked().getInventory().addItem(sell);
-            e.getWhoClicked().openInventory(new MainScreen(pd).getInventory());
-        }));
-
-        setButton(4, new Button(sell, (e, i) -> {
+        //buttons = new Button[buttons.length];
+        //inv.clear();
+    	
+    	
+    	setAction(0, (p, e) -> {
+            p.getInventory().addItem(sell);
+            p.openInventory(new MainScreen(pd).getInventory());
+        });
+    	setItem(0, Material.FEATHER).n("§cBack");
+        
+        setAction(4, (p, e) -> {
             e.setCancelled(false);
+        });
+        setItem(4, sell);
+        
+        setItem(3, Material.GRAY_CONCRETE);
+        setItem(5, Material.GRAY_CONCRETE);
 
-        }));
-
-        setButton(3, new Button(Material.GRAY_CONCRETE));
-        setButton(5, new Button(Material.GRAY_CONCRETE));
-
-        ItemStack item = new ItemStack(Material.RED_CONCRETE);
-        item.setAmount(10);
-        ItemMeta imeta = item.getItemMeta();
-        imeta.setDisplayName("");
-        item.setItemMeta(imeta);
-        setButton(10, new Button(item));
-
-        item = new ItemStack(Material.RED_CONCRETE);
-        item.setAmount(5);
-        imeta = item.getItemMeta();
-        imeta.setDisplayName("");
-        item.setItemMeta(imeta);
-        setButton(11, new Button(item));
-
-        setButton(12, new Button(Material.RED_CONCRETE, ""));
-
-        setButton(13, new Button(Material.AIR, (e, i) -> {
+        setItem(10, Material.RED_CONCRETE).n("");
+        setItem(11, Material.RED_CONCRETE).n("").a(5);
+        setItem(12, Material.RED_CONCRETE).n("").a(10);
+        
+        setAction(13, (p, e) -> {
             if (e.getCursor() != null && e.getCursor().getType() != Material.AIR) {
                 if (price != null) {
                     price.setType(e.getCursor().getType());
@@ -63,45 +52,35 @@ public class CreateListing extends BaseInventory {
                     price = e.getCursor().clone();
                 }
             }
-        }));
-
-        setButton(14, new Button(Material.GREEN_CONCRETE, ""));
-
-        item = new ItemStack(Material.GREEN_CONCRETE);
-        item.setAmount(5);
-        imeta = item.getItemMeta();
-        imeta.setDisplayName("");
-        item.setItemMeta(imeta);
-        setButton(15, new Button(item));
-
-        item = new ItemStack(Material.GREEN_CONCRETE);
-        item.setAmount(10);
-        imeta = item.getItemMeta();
-        imeta.setDisplayName("");
-        item.setItemMeta(imeta);
-        setButton(16, new Button(item));
-
-        setButton(22, new Button(Material.GRAY_CONCRETE, "To set the price of your item, \nput an item in the slot above!"));
-
+        });
+        setItem(13, Material.AIR);
+        
+        setItem(14, Material.GREEN_CONCRETE).n("");
+        setItem(15, Material.GREEN_CONCRETE).n("").a(5);
+        setItem(16, Material.GREEN_CONCRETE).n("").a(10);
+        
+        setItem(22, Material.GRAY_CONCRETE).n("To set the price of your item, \nput an item in the slot above!");
     }
 
     private void setOpen() {
 
-        buttons = new Button[buttons.length];
-        inv.clear();
+        buttons = new Butto[buttons.length];
+        getInventory().clear();
+        
+        
+        setAction(0, (p, e) -> {
+            p.openInventory(new MainScreen(pd).getInventory());
+        });
+        setItem(0, Material.FEATHER).n("§cBack");
 
-        setButton(0, new Button(Material.FEATHER, (e, i) -> {
-            e.getWhoClicked().openInventory(new MainScreen(pd).getInventory());
-        }, "Â§cBack"));
+        setItem(4, Material.GRAY_CONCRETE);
+        setItem(12, Material.GRAY_CONCRETE);
+        setItem(14, Material.GRAY_CONCRETE);
+        setItem(22, Material.GRAY_CONCRETE);
 
-        setButton(4, new Button(Material.GRAY_CONCRETE));
-        setButton(12, new Button(Material.GRAY_CONCRETE));
-        setButton(14, new Button(Material.GRAY_CONCRETE));
-        setButton(22, new Button(Material.GRAY_CONCRETE));
-
-        setButton(13, new Button(Material.AIR, (e, i) -> {
+        setAction(13, (p, e) -> {
             setPrice(e.getCursor());
-        }));
+        });
     }
     
 

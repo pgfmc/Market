@@ -28,8 +28,7 @@ public class Shop implements CommandExecutor {
 		
 		if (pd == null) return true;
 		
-		
-		((Player) sender).openInventory(new MainScreen(PlayerData.getPlayerData((Player) sender)).getInventory()); // opens the inventory
+		((Player) sender).openInventory(new MainScreen(pd).getInventory()); // opens the inventory
 		
 		return true;
 	}

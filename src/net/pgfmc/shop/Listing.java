@@ -3,18 +3,12 @@ package net.pgfmc.shop;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import net.pgfmc.core.inventoryAPI.extra.Button;
-import net.pgfmc.core.playerdataAPI.PlayerData;
-import net.pgfmc.shop.Inventories.ListingBuy;
 
 public class Listing {
 	
@@ -46,13 +40,15 @@ public class Listing {
 	
 	// ------------------------------------------------------------------------ Save and Load
 	
+	@Deprecated
 	public static void saveListings() {
-		Database.save(instances);
+		//Database.save(instances);
 	}
 	
+	@Deprecated
 	public static void loadListings() {
-		instances = new ArrayList<Listing>();
-		Database.load();
+		//instances = new ArrayList<Listing>();
+		//Database.load();
 	}
 	
 	// ------------------------------------------------------------------------ Get Listings (instances)
@@ -63,31 +59,6 @@ public class Listing {
 			list.add(listing);
 		}
 		return list;
-	}
-
-	public static List<Button> getButtons(PlayerData pd) {
-		return instances.stream().map(x -> {
-			return x.toButton(pd);
-		}).collect(Collectors.toList());
-	}
-
-	/**
-	 * Gets the button that can open the listing to its buy inventory.
-	 * @return
-	 */
-	public Button toButton(PlayerData pd) {
-
-		if (playerUuid.equals(pd.getUniqueId())) {
-			return new Button(itemBeingSold.getType(), (e, d) -> {
-				e.getWhoClicked().openInventory(new ListingBuy(this, PlayerData.getPlayerData((Player) e.getWhoClicked())).getInventory());
-			}, null, "§dCost: " + getPrice());
-
-		} else {
-			return new Button(itemBeingSold.getType(), (e, d) -> {
-
-				e.getWhoClicked().openInventory(new ListingBuy(this, PlayerData.getPlayerData((Player) e.getWhoClicked())).getInventory());
-			}, null, "§dCost: " + getPrice());
-		}
 	}
 
 	// ------------------------------------------------------------------------ Get itemBeingSold / icon
